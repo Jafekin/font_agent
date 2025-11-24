@@ -55,7 +55,7 @@
 
 ## 运行样例
 
-![alt text](doc/PixPin_2025-11-18_19-14-47.png)
+![alt text](doc/PixPin_2025-11-24_15-43-22.png)
 
 > 输入概览
 >
