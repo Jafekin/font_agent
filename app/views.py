@@ -343,11 +343,23 @@ def history(request):
 
     data = []
     for analysis in analyses:
+        full_result = analysis.result or ''
+        preview = f"{full_result[:200]}..." if len(
+            full_result) > 200 else full_result
+
+        try:
+            image_url = request.build_absolute_uri(
+                analysis.image.url) if analysis.image else ''
+        except ValueError:
+            image_url = analysis.image.url if analysis.image else ''
+
         data.append({
             'id': analysis.id,
             'script_type': analysis.script_type,
             'hint': analysis.hint,
-            'result': analysis.result[:200] + '...' if len(analysis.result) > 200 else analysis.result,
+            'result_preview': preview,
+            'result_full': full_result,
+            'image_url': image_url,
             'created_at': analysis.created_at.strftime('%Y-%m-%d %H:%M:%S')
         })
 
