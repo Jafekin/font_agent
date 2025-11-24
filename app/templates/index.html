@@ -600,6 +600,41 @@
         border-color: var(--accent);
       }
 
+      .history-item.active {
+        border-color: var(--accent);
+        box-shadow: 0 6px 14px rgba(199, 46, 46, 0.18);
+      }
+
+      .history-item-top {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 6px;
+      }
+
+      .history-thumb {
+        width: 68px;
+        height: 68px;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 1px solid var(--border);
+        background: #fff;
+        flex-shrink: 0;
+      }
+
+      .history-thumb.placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 11px;
+        color: var(--muted);
+        background: #f4e7d2;
+      }
+
+      .history-item-meta {
+        flex: 1;
+      }
+
       .history-item-title {
         font-weight: 600;
         color: var(--text);
@@ -610,6 +645,15 @@
         color: var(--muted);
         font-size: 11px;
       }
+
+      .history-item-preview {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.4;
+        max-height: 4.5em;
+        overflow: hidden;
+      }
     </style>
   </head>
   <body>
@@ -617,7 +661,7 @@
       <!-- Brand Header -->
       <div class="brand">
         <div class="title">📜 古籍影像智能识别助手</div>
-        <div class="subtitle">上传古文图片 · 识别与释读 · 提供考证建议</div>
+        <div class="subtitle">上传古籍图片·识别与释读·提供保护实践参考</div>
       </div>
 
       <!-- Main Content -->
@@ -677,7 +721,7 @@
             <button class="btn-primary" id="analyzeBtn">
               <span class="btn-icon">🔍</span>
               <span class="btn-copy">
-                <strong>开始识别古文字</strong>
+                <strong>开始识别</strong>
                 <small>OCR + 智能释读</small>
               </span>
             </button>
@@ -788,6 +832,37 @@
         "imagePreviewContainer"
       );
       const historyContainer = document.getElementById("historyContainer");
+      const historyCache = new Map();
+      let activeHistoryId = null;
+
+      if (historyContainer) {
+        historyContainer.addEventListener("click", (event) => {
+          const itemEl = event.target.closest(".history-item");
+          if (!itemEl) return;
+          showHistoryItem(itemEl);
+        });
+      }
+
+      function escapeHtml(str = "") {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function sanitizeUrl(url = "") {
+        try {
+          const normalized = url.trim();
+          if (!normalized) return "";
+          const parsed = new URL(normalized, window.location.origin);
+          return parsed.href;
+        } catch (err) {
+          console.warn("Invalid URL in history record", url, err);
+          return "";
+        }
+      }
 
       if (window.marked) {
         marked.setOptions({
@@ -988,16 +1063,35 @@
           const data = await response.json();
 
           if (data.success && data.data.length > 0) {
-            historyContainer.innerHTML = data.data
-              .map(
-                (item) => `
-                        <div class="history-item" onclick="showHistoryItem(this)">
-                            <div class="history-item-title">${item.script_type}</div>
-                            <div class="history-item-time">${item.created_at}</div>
+            historyCache.clear();
+            const cards = data.data
+              .map((item) => {
+                const id = String(item.id);
+                historyCache.set(id, item);
+                const preview = escapeHtml(item.result_preview || "暂无预览");
+                const thumbUrl = sanitizeUrl(item.image_url);
+                const thumb = thumbUrl
+                  ? `<img src="${thumbUrl}" class="history-thumb" alt="历史图片" loading="lazy">`
+                  : `<div class="history-thumb placeholder">暂无图片</div>`;
+                return `
+                        <div class="history-item" data-id="${id}">
+                            <div class="history-item-top">
+                                ${thumb}
+                                <div class="history-item-meta">
+                                    <div class="history-item-title">${escapeHtml(
+                                      item.script_type || "未知类型"
+                                    )}</div>
+                                    <div class="history-item-time">${escapeHtml(
+                                      item.created_at || ""
+                                    )}</div>
+                                </div>
+                            </div>
+                            <div class="history-item-preview">${preview}</div>
                         </div>
-                    `
-              )
+                    `;
+              })
               .join("");
+            historyContainer.innerHTML = cards;
           }
         } catch (error) {
           console.error("Failed to load history:", error);
@@ -1006,8 +1100,54 @@
 
       // Show history item
       function showHistoryItem(element) {
-        const title = element.querySelector(".history-item-title").textContent;
-        showMessage(`已加载: ${title}`, "success");
+        if (!element) return;
+        const id = element.dataset.id;
+        if (!id || !historyCache.has(id)) {
+          showMessage("未找到该历史记录数据", "error");
+          return;
+        }
+
+        const record = historyCache.get(id);
+        const fullResult = record.result_full || "";
+        if (fullResult) {
+          resultOutput.innerHTML = markdownToHtml(fullResult);
+          buildTOC();
+          copyBtn.style.display = "inline-flex";
+          showMessage(
+            `已加载历史记录（${record.script_type || "未知类型"} · ${
+              record.created_at || ""
+            }）`,
+            "success"
+          );
+        } else {
+          showMessage("该条记录缺少内容", "error");
+        }
+        if (record.hint) {
+          hintText.value = record.hint;
+        }
+        if (record.script_type) {
+          scriptType.value = record.script_type;
+        }
+
+        if (imagePreviewContainer) {
+          const safePreviewUrl = sanitizeUrl(record.image_url);
+          if (safePreviewUrl) {
+            imagePreviewContainer.innerHTML = `
+              <img src="${safePreviewUrl}" class="image-preview" alt="历史图片" />
+            `;
+          } else if (!imageInput.files.length) {
+            imagePreviewContainer.innerHTML = "";
+          }
+        }
+
+        if (activeHistoryId && activeHistoryId !== id) {
+          const prevActive = historyContainer.querySelector(
+            `.history-item[data-id="${activeHistoryId}"]`
+          );
+          prevActive?.classList.remove("active");
+        }
+        element.classList.add("active");
+        activeHistoryId = id;
       }
 
       // Initialize

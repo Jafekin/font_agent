@@ -1,26 +1,53 @@
-"""简单示例：直接调用 PaddleLayoutPipeline 进行识别。"""
-import argparse
-import json
+import requests
 
-from ocr.paddle_pipeline import PaddleLayoutPipeline
+url = "https://api.siliconflow.cn/v1/chat/completions"
 
+payload = {
+    "model": "deepseek-ai/DeepSeek-OCR",
+    "messages": [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "text": "Free OCR",
+                    "type": "text"
+                },
+                {
+                    "image_url": {"detail": "auto"},
+                    "type": "image_url"
+                }
+            ]
+        }
+    ],
+    "stream": False,
+    "max_tokens": 4096,
+    "enable_thinking": False,
+    "thinking_budget": 4096,
+    "min_p": 0.05,
+    "stop": [],
+    "temperature": 0.7,
+    "top_p": 0.7,
+    "top_k": 50,
+    "frequency_penalty": 0.5,
+    "n": 1,
+    "response_format": {"type": "text"},
+    "tools": [
+        {
+            "type": "function",
+            "function": {
+                "description": "<string>",
+                "name": "<string>",
+                "parameters": {},
+                "strict": False
+            }
+        }
+    ]
+}
+headers = {
+    "Authorization": "Bearer sk-vedrofottwzpxveidegfstxtmtjibwiknziaqenxyqexqkdx",
+    "Content-Type": "application/json"
+}
 
-def main():
-    parser = argparse.ArgumentParser(description="PaddleOCR 版式识别示例")
-    parser.add_argument("image", nargs="?", default="data/史记_1_100393_0065_b2425e.jpg",
-                        help="需要识别的图片路径")
-    parser.add_argument("--lang", default="chinese_cht", help="PaddleOCR 语言代码")
-    parser.add_argument("--gpu", action="store_true", help="启用 GPU 推理")
-    args = parser.parse_args()
+response = requests.post(url, json=payload, headers=headers)
 
-    kwargs = {"lang": args.lang, "use_angle_cls": False}
-    if args.gpu:
-        kwargs["use_gpu"] = True
-
-    analyzer = PaddleLayoutPipeline(ocr_kwargs=kwargs)
-    result = analyzer.analyze_image(args.image)
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-
-
-if __name__ == "__main__":
-    main()
+print(response.json())
