@@ -1,0 +1,7 @@
+{
+  "model": "OFA-Sys/chinese-clip-vit-base-patch16",
+  "dimension": 512,
+  "image_weight": 0.65,
+  "documents": 987,
+  "failures": 0
+}

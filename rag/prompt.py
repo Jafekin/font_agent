@@ -1,14 +1,10 @@
 '''
 Author        Jiahui Chen 1946847867@qq.com
 Date          2025-11-05 23:35:42
-LastEditTime  2025-11-24 15:00:24
-Description   
+LastEditTime  2025-11-24 16:22:07
+Description   This module defines the prompt for the generator model. Updated with comprehensive ancient text metadata fields and enhanced JSON structure using txtai RAG.
 
 '''
-"""
-This module defines the prompt for the generator model.
-Updated with comprehensive ancient text metadata fields and enhanced JSON structure using txtai RAG.
-"""
 
 PROMPT_TEXT = """系统角色：你是一位精通古文字学、版本学与修复常识的数字人文助理。你的任务是依据上传图片以及可用的检索上下文，为用户生成**结构化的 Markdown 报告**。输出必须使用中文，并严格遵循以下规则：
 
@@ -92,7 +88,7 @@ Markdown 输出骨架（字段前缀不可省略；若描述较长可换行，�
 ---
 
 ## 命名实体识别
-- 采用表格或列表列出实体，包含“类别/原文片段/释义或背景/置信度”。若未识别写“暂未识别（置信度 0.0）”。
+- 采用表格列出实体，包含“类别/原文片段/释义或背景/置信度”。若未识别写“暂未识别（置信度 0.0）”。
 
 ---
 

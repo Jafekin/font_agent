@@ -135,7 +135,6 @@ dmypy.json
 /uploads/
 /data/名录 史记2025-11-6
 /model/*
-/rag/index*
 /data/*
 
 # OS
