@@ -3,4 +3,4 @@
 	url = https://github.com/neuml/txtai.git
 [submodule "thirdparty/Chinese-CLIP"]
 	path = thirdparty/Chinese-CLIP
-	url = git@github.com:OFA-Sys/Chinese-CLIP.git
+	url = https://github.com/OFA-Sys/Chinese-CLIP.git
