@@ -86,6 +86,14 @@ def _load_chinese_clip():
     return model, preprocess
 
 
+def _load_colorless_image(image_path: str) -> Image.Image:
+    """Open image as luminance-only data expanded to RGB for CLIP preprocessing."""
+
+    with Image.open(image_path) as img:
+        grayscale = img.convert("L")  # strip chroma information
+        return grayscale.convert("RGB")
+
+
 def _normalize(vec: np.ndarray) -> List[float]:
     @lru_cache(maxsize=1)
     def _load_cn_clip_module():
@@ -120,7 +128,8 @@ def get_image_embedding(image_path: str, *, normalize: bool = True) -> List[floa
         return vec.tolist()
 
     with torch.no_grad():
-        image = preprocess(Image.open(image_path)).unsqueeze(0).to(DEVICE)
+        image = preprocess(_load_colorless_image(image_path))
+        image = image.unsqueeze(0).to(DEVICE)
         vec = model.encode_image(image)
         vec = vec.squeeze(0).cpu().numpy()
     return _normalize(vec) if normalize else vec.tolist()
@@ -158,7 +167,7 @@ def batch_image_embeddings(image_paths: List[str], *, normalize: bool = True) ->
     vectors: List[List[float]] = []
     batch_tensors = []
     for path in valid_paths:
-        tensor = preprocess(Image.open(path)).unsqueeze(0)
+        tensor = preprocess(_load_colorless_image(path)).unsqueeze(0)
         batch_tensors.append(tensor)
 
         if len(batch_tensors) == 8:

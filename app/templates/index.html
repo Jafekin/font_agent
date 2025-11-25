@@ -239,6 +239,28 @@
         margin-bottom: 12px;
       }
 
+      .image-preview-wrapper {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        padding: 0;
+        background: #fff;
+        margin-bottom: 8px;
+      }
+
+      .image-preview-original {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .image-preview-meta {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: right;
+        margin-bottom: 12px;
+      }
+
       .top-actions {
         display: flex;
         gap: 8px;
@@ -886,11 +908,20 @@
         if (file) {
           const reader = new FileReader();
           reader.onload = (event) => {
-            imagePreviewContainer.innerHTML = `
-                        <img src="${event.target.result}" class="image-preview" alt="Preview">
-                    `;
-            // Auto-analyze when image is selected
-            analyzeImage();
+            const imageUrl = event.target.result;
+            const previewImg = new Image();
+            previewImg.onload = () => {
+              const width = previewImg.naturalWidth;
+              const height = previewImg.naturalHeight;
+              imagePreviewContainer.innerHTML = `
+                <div class="image-preview-wrapper">
+                  <img src="${imageUrl}" class="image-preview-original" alt="Preview">
+                </div>
+                <div class="image-preview-meta">原始尺寸：${width} × ${height} 像素（预览等宽显示）</div>
+              `;
+              analyzeImage();
+            };
+            previewImg.src = imageUrl;
           };
           reader.readAsDataURL(file);
         }
