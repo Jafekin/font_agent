@@ -856,6 +856,10 @@
       const historyContainer = document.getElementById("historyContainer");
       const historyCache = new Map();
       let activeHistoryId = null;
+      let activeHistoryRecord = null;
+      let activeHistoryImageUrl = "";
+      let cachedHistoryFile = null;
+      let historyFilePromise = null;
 
       if (historyContainer) {
         historyContainer.addEventListener("click", (event) => {
@@ -929,7 +933,18 @@
 
       // Analyze image
       async function analyzeImage() {
-        const file = imageInput.files[0];
+        let file = imageInput.files[0];
+        if (!file && activeHistoryImageUrl) {
+          try {
+            showMessage("正在载入历史记录图片…", "success");
+            file = await ensureHistoryImageFile();
+          } catch (historyError) {
+            console.error("Failed to load history image", historyError);
+            showMessage("历史记录图片加载失败，请重新选择或上传。", "error");
+            return;
+          }
+        }
+
         if (!file) {
           showMessage("请先上传古文字图片！", "error");
           return;
@@ -968,6 +983,62 @@
         } finally {
           showLoading(false);
         }
+      }
+
+      async function ensureHistoryImageFile() {
+        if (cachedHistoryFile) {
+          return cachedHistoryFile;
+        }
+        if (!activeHistoryRecord || !activeHistoryImageUrl) {
+          return null;
+        }
+        if (!historyFilePromise) {
+          historyFilePromise = fetchHistoryImageFile(
+            activeHistoryRecord,
+            activeHistoryImageUrl
+          );
+        }
+        cachedHistoryFile = await historyFilePromise;
+        historyFilePromise = null;
+        return cachedHistoryFile;
+      }
+
+      async function fetchHistoryImageFile(record, url) {
+        if (!url) {
+          throw new Error("历史记录缺少图片链接");
+        }
+        const response = await fetch(url, { credentials: "same-origin" });
+        if (!response.ok) {
+          throw new Error(`历史图片下载失败: ${response.status}`);
+        }
+        const blob = await response.blob();
+        const extension = (blob.type?.split("/")[1] || "png").split(";")[0];
+        const filename = deriveHistoryFilename(record, extension);
+        return new File([blob], filename, {
+          type: blob.type || "image/png",
+          lastModified: Date.now(),
+        });
+      }
+
+      function deriveHistoryFilename(record, ext = "png") {
+        const explicitName =
+          record?.filename || record?.original_filename || record?.file_name;
+        if (explicitName) {
+          return explicitName;
+        }
+        try {
+          if (record?.image_url) {
+            const parsed = new URL(record.image_url, window.location.origin);
+            const base = parsed.pathname.split("/").filter(Boolean).pop();
+            if (base) {
+              return base;
+            }
+          }
+        } catch (_) {
+          // ignore parsing errors
+        }
+        const safeExt = ext || "png";
+        return `history_${record?.id || Date.now()}.${safeExt}`;
       }
 
       // Show loading spinner
@@ -1169,6 +1240,18 @@
           } else if (!imageInput.files.length) {
             imagePreviewContainer.innerHTML = "";
           }
+          activeHistoryImageUrl = safePreviewUrl;
+        } else {
+          activeHistoryImageUrl = "";
+        }
+
+        activeHistoryRecord = record;
+        cachedHistoryFile = null;
+        historyFilePromise = null;
+        if (activeHistoryImageUrl) {
+          ensureHistoryImageFile().catch((error) => {
+            console.error("预加载历史图片失败", error);
+          });
         }
 
         if (activeHistoryId && activeHistoryId !== id) {
