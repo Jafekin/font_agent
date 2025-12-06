@@ -317,7 +317,7 @@ python3 -m venv .venv
 source .venv/bin/activate  # Windows 使用 .venv\Scripts\activate
 
 # 3. 安装依赖
-pip install -r requirements.txt
+pip install -r pyproject.toml
 
 # 4. 初始化数据库
 .venv/bin/python manage.py migrate
@@ -358,7 +358,6 @@ pip install -r requirements.txt
 .venv/bin/python -m pytest tests
 
 # 构建 / 重建 Chinese-CLIP 索引（numpy 文件）
-pip install -e thirdparty/Chinese-CLIP  # 首次需要安装子模块
 .venv/bin/python scripts/build_index.py --image-dir media/uploads --index-path rag/index --image-weight 0.65
 
 # 启动 VS Code 默认任务（server）
