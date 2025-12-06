@@ -318,8 +318,8 @@ pip install -e thirdparty/Chinese-CLIP
 # 1. 克隆项目
 git clone --recursive https://github.com/Jafekin/font.git font && cd font
 
-# 2. 创建虚拟环境（推荐同目录，不覆盖系统 Python）
-uv init --python 3.12.8
+# 2. 创建uv虚拟环境
+uv sync
 
 # 3. 安装依赖
 uv pip install -r requirements.txt
