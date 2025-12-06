@@ -318,7 +318,6 @@ source .venv/bin/activate  # Windows 使用 .venv\Scripts\activate
 
 # 3. 安装依赖
 pip install -r requirements.txt
-pip install -e thirdparty/Chinese-CLIP
 
 # 4. 初始化数据库
 .venv/bin/python manage.py migrate
