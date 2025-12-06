@@ -141,6 +141,7 @@ LOGGING = {
         'app.views': {
             'handlers': ['console'],
             'level': os.getenv('APP_LOG_LEVEL', 'INFO'),
+            'propagate': False,
         },
         '': {
             'handlers': ['console'],

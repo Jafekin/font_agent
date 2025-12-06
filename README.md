@@ -13,6 +13,8 @@
   - [系统架构](#系统架构)
   - [运行样例](#运行样例)
   - [快速上手](#快速上手)
+    - [venv](#venv)
+    - [uv](#uv)
   - [环境变量](#环境变量)
   - [运行与调试](#运行与调试)
   - [API 速览](#api-速览)
@@ -285,6 +287,8 @@
 
 ## 快速上手
 
+### venv
+
 ```bash
 # 1. 克隆项目
 git clone --recursive https://github.com/Jafekin/font.git font && cd font
@@ -295,6 +299,7 @@ source .venv/bin/activate  # Windows 使用 .venv\Scripts\activate
 
 # 3. 安装依赖
 pip install -r requirements.txt
+pip install -e thirdparty/Chinese-CLIP
 
 # 4. 初始化数据库
 .venv/bin/python manage.py migrate
@@ -304,6 +309,30 @@ pip install -r requirements.txt
 
 # 6. 启动开发服务器
 .venv/bin/python manage.py runserver 0.0.0.0:8000
+```
+
+### uv
+
+
+```bash
+# 1. 克隆项目
+git clone --recursive https://github.com/Jafekin/font.git font && cd font
+
+# 2. 创建虚拟环境（推荐同目录，不覆盖系统 Python）
+uv init --python 3.12.8
+
+# 3. 安装依赖
+uv pip install -r requirements.txt
+uv pip install -e thirdparty/Chinese-CLIP
+
+# 4. 初始化数据库
+uv run manage.py migrate
+
+# 5.（可选）创建管理员
+uv runn manage.py createsuperuser
+
+# 6. 启动开发服务器
+uv run manage.py runserver 0.0.0.0:8000
 ```
 
 访问：
