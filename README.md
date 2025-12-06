@@ -13,8 +13,8 @@
   - [系统架构](#系统架构)
   - [运行样例](#运行样例)
   - [快速上手](#快速上手)
-    - [venv](#venv)
     - [uv](#uv)
+    - [venv](#venv)
   - [环境变量](#环境变量)
   - [运行与调试](#运行与调试)
   - [API 速览](#api-速览)
@@ -287,6 +287,25 @@
 
 ## 快速上手
 
+### uv
+
+```bash
+# 1. 克隆项目
+git clone --recursive https://github.com/Jafekin/font.git font && cd font
+
+# 2. 创建uv虚拟环境
+uv sync
+
+# 3. 初始化数据库
+uv run manage.py migrate
+
+# 4.（可选）创建管理员
+uv run manage.py createsuperuser
+
+# 5. 启动开发服务器
+uv run manage.py runserver 0.0.0.0:8000
+```
+
 ### venv
 
 ```bash
@@ -309,30 +328,6 @@ pip install -e thirdparty/Chinese-CLIP
 
 # 6. 启动开发服务器
 .venv/bin/python manage.py runserver 0.0.0.0:8000
-```
-
-### uv
-
-
-```bash
-# 1. 克隆项目
-git clone --recursive https://github.com/Jafekin/font.git font && cd font
-
-# 2. 创建uv虚拟环境
-uv sync
-
-# 3. 安装依赖
-uv pip install -r requirements.txt
-uv pip install -e thirdparty/Chinese-CLIP
-
-# 4. 初始化数据库
-uv run manage.py migrate
-
-# 5.（可选）创建管理员
-uv runn manage.py createsuperuser
-
-# 6. 启动开发服务器
-uv run manage.py runserver 0.0.0.0:8000
 ```
 
 访问：
