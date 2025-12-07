@@ -317,7 +317,7 @@ python3 -m venv .venv
 source .venv/bin/activate  # Windows 使用 .venv\Scripts\activate
 
 # 3. 安装依赖
-pip install -r pyproject.toml
+pip install -e .
 
 # 4. 初始化数据库
 .venv/bin/python manage.py migrate
