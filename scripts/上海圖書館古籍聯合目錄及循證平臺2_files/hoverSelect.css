@@ -1,0 +1,27 @@
+.nav-div-a {
+	position:relative;
+	display: inline-block;
+}
+.hoverSelect {
+	display: none;
+	position: absolute;
+    top: 90%;
+    width: 150px;
+    left: 0;
+}
+.hoverSelect li a {
+    color: #fff !important;
+	display: block !important;
+    line-height: 30px;
+    margin: 0;
+    padding: 0 0 0 18px;
+    font-weight: normal;
+    text-align: left;
+    background: #252525;
+    font-size: 14px !important;
+    text-decoration: none !important;
+}
+.hoverSelect li a:hover {
+	background: #1a66cc;
+	font-weight: normal !important;
+}

@@ -1,0 +1,103 @@
+$(function(){
+	var dataType ;
+    var worksTpl = $("#worksTpl").html();
+    var loadDataList = function(){$("#workForm").submit()};
+    
+    var initQuery = function(){
+        PARAM_MGR.loadParams();
+        var hashQuery = false;
+        var params = ["title","place", "familyName"];
+        var uri = PARAM_MGR.getParam("uri");
+        dataType = PARAM_MGR.getParam("dataType");
+        if(uri){
+            $("#top span").hide();
+            $("#workForm").hide();
+            showWork(uri);
+        } else {
+            $.each(params, function (i) {
+                var param = params[i];
+                var value = PARAM_MGR.getParam(param);
+                if (value) {
+                    hashQuery = true;
+                    $("#workForm input[name=" + param + "]").val(value);
+                }
+            });
+			loadDataList();
+        }
+    };
+  
+    var showWork = function(uri){
+    	start_loading();
+        $.get(ctx + "/service/work/get?from=" + PARAM_MGR.getParam("from"), {uri : uri}, function(data){
+            hide_loading();
+            if(!data){ Dialog.error("未查詢到相關信息！");return;}
+            var html = juicer($("#workTpl").html(), data);
+            //隐藏高级查询按钮
+            $(".Search").html('');
+            $("#topTitle").html(data.work.insInfo.title);
+            $("#hidUri").val(uri);
+            $("#workForm").hide();
+            $("#workView").html(html).fadeIn("slow");
+            $('[data-toggle="popover"]').each(function () {
+                var element = $(this);
+                var id = element.attr('id');
+                var tabooData = {id:element.attr('id'), char:element.attr('data-char'), emp:element.attr('data-emp'), temp:element.attr('data-temp'), img:element.attr('data-img'), person:element.attr('data-p-id'), description: element.attr('data-desc') };
+                element.popover({
+                    trigger: 'manual',
+                    placement: 'top', //top, bottom, left or right
+                    title: "避諱字",
+                    html: 'true',
+                    content: juicer(getTemplate("taboopopover"), tabooData),
+
+                }).on("mouseenter", function () {
+                    var _this = this;
+                    $(this).popover("show");
+                    $(this).siblings(".popover").on("mouseleave", function () {
+                        $(_this).popover('hide');
+                    });
+                }).on("mouseleave", function () {
+                    var _this = this;
+                    setTimeout(function () {
+                        if (!$(".popover:hover").length) {
+                            $(_this).popover("hide")
+                        }
+                    }, 100);
+                });
+            });
+        });
+    }
+    
+    
+    $("#dataDiv").on("click", "a[tag=work]", function(){
+        var uri = $(this).attr("href");
+        showWork(uri)
+        return false;
+    })
+    $("#btn_back").click(function(){
+        $("#top span").text($("#top span").attr("text"));
+        $(this).hide();
+        $("#btn_mig").hide();
+        $("#btn_tree").hide();
+        $("#workView").hide();
+        $("#workForm").fadeIn("slow");
+    });
+    initQuery();   
+    
+    $('#workView').delegate('.version-cl a', 'click', function() {
+          $(".version-cl a").parent().toggleClass("cur")
+      })
+
+      $('#workView').delegate('.show-lines', 'click', function() {
+          $(".show-lines").toggleClass("cur");
+          $(".library-cl2").find(".pos").slideToggle();
+          $(".library-cl2").find(".tags").slideToggle();
+      })
+
+      $('#workView').delegate('.library-cl2 .arrow', 'click', function() {
+    	  $(this).toggleClass("cur");
+    	  $(this).parent().parent().find(".tips").slideToggle();
+      })
+      
+      
+})
+

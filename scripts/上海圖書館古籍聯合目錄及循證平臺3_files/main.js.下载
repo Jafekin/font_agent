@@ -1,0 +1,335 @@
+/**
+ * Created by admin on 2018/8/8.
+ */
+
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?cc31e2101a7aae275a59b72080aed465";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+(function($, h, c) {
+	var a = $([]), e = $.resize = $.extend($.resize, {}), i, k = "setTimeout", j = "resize", d = j
+			+ "-special-event", b = "delay", f = "throttleWindow";
+	e[b] = 350;
+	e[f] = true;
+	$.event.special[j] = {
+		setup : function() {
+			if (!e[f] && this[k]) {
+				return false
+			}
+			var l = $(this);
+			a = a.add(l);
+			$.data(this, d, {
+				w : l.width(),
+				h : l.height()
+			});
+			if (a.length === 1) {
+				g()
+			}
+		},
+		teardown : function() {
+			if (!e[f] && this[k]) {
+				return false
+			}
+			var l = $(this);
+			a = a.not(l);
+			l.removeData(d);
+			if (!a.length) {
+				clearTimeout(i)
+			}
+		},
+		add : function(l) {
+			if (!e[f] && this[k]) {
+				return false
+			}
+			var n;
+			function m(s, o, p) {
+				var q = $(this), r = $.data(this, d);
+				r.w = o !== c ? o : q.width();
+				r.h = p !== c ? p : q.height();
+				n.apply(this, arguments)
+			}
+			if ($.isFunction(l)) {
+				n = l;
+				return m
+			} else {
+				n = l.handler;
+				l.handler = m
+			}
+		}
+	};
+	function g() {
+		i = h[k](function() {
+			a.each(function() {
+				var n = $(this), m = n.width(), l = n.height(), o = $
+						.data(this, d);
+				if (m !== o.w || l !== o.h) {
+					n.trigger(j, [ o.w = m, o.h = l ])
+				}
+			});
+			g()
+		}, e[b])
+	}
+})(jQuery, this);
+
+(function(jQuery) {
+
+	if (jQuery.browser)
+		return;
+
+	jQuery.browser = {};
+	jQuery.browser.mozilla = false;
+	jQuery.browser.webkit = false;
+	jQuery.browser.opera = false;
+	jQuery.browser.msie = false;
+
+	var nAgt = navigator.userAgent;
+	jQuery.browser.name = navigator.appName;
+	jQuery.browser.fullVersion = '' + parseFloat(navigator.appVersion);
+	jQuery.browser.majorVersion = parseInt(navigator.appVersion, 10);
+	var nameOffset, verOffset, ix;
+
+	// In Opera, the true version is after "Opera" or after "Version"
+	if ((verOffset = nAgt.indexOf("Opera")) != -1) {
+		jQuery.browser.opera = true;
+		jQuery.browser.name = "Opera";
+		jQuery.browser.fullVersion = nAgt.substring(verOffset + 6);
+		if ((verOffset = nAgt.indexOf("Version")) != -1)
+			jQuery.browser.fullVersion = nAgt.substring(verOffset + 8);
+	}
+	// In MSIE, the true version is after "MSIE" in userAgent
+	else if ((verOffset = nAgt.indexOf("MSIE")) != -1) {
+		jQuery.browser.msie = true;
+		jQuery.browser.name = "Microsoft Internet Explorer";
+		jQuery.browser.fullVersion = nAgt.substring(verOffset + 5);
+	}
+	// In Chrome, the true version is after "Chrome"
+	else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
+		jQuery.browser.webkit = true;
+		jQuery.browser.name = "Chrome";
+		jQuery.browser.fullVersion = nAgt.substring(verOffset + 7);
+	}
+	// In Safari, the true version is after "Safari" or after "Version"
+	else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
+		jQuery.browser.webkit = true;
+		jQuery.browser.name = "Safari";
+		jQuery.browser.fullVersion = nAgt.substring(verOffset + 7);
+		if ((verOffset = nAgt.indexOf("Version")) != -1)
+			jQuery.browser.fullVersion = nAgt.substring(verOffset + 8);
+	}
+	// In Firefox, the true version is after "Firefox"
+	else if ((verOffset = nAgt.indexOf("Firefox")) != -1) {
+		jQuery.browser.mozilla = true;
+		jQuery.browser.name = "Firefox";
+		jQuery.browser.fullVersion = nAgt.substring(verOffset + 8);
+	}
+	// In most other browsers, "name/version" is at the end of userAgent
+	else if ((nameOffset = nAgt.lastIndexOf(' ') + 1) < (verOffset = nAgt
+			.lastIndexOf('/'))) {
+		jQuery.browser.name = nAgt.substring(nameOffset, verOffset);
+		jQuery.browser.fullVersion = nAgt.substring(verOffset + 1);
+		if (jQuery.browser.name.toLowerCase() == jQuery.browser.name
+				.toUpperCase()) {
+			jQuery.browser.name = navigator.appName;
+		}
+	}
+	// trim the fullVersion string at semicolon/space if present
+	if ((ix = jQuery.browser.fullVersion.indexOf(";")) != -1)
+		jQuery.browser.fullVersion = jQuery.browser.fullVersion
+				.substring(0, ix);
+	if ((ix = jQuery.browser.fullVersion.indexOf(" ")) != -1)
+		jQuery.browser.fullVersion = jQuery.browser.fullVersion
+				.substring(0, ix);
+
+	jQuery.browser.majorVersion = parseInt('' + jQuery.browser.fullVersion, 10);
+	if (isNaN(jQuery.browser.majorVersion)) {
+		jQuery.browser.fullVersion = '' + parseFloat(navigator.appVersion);
+		jQuery.browser.majorVersion = parseInt(navigator.appVersion, 10);
+	}
+	jQuery.browser.version = jQuery.browser.majorVersion;
+})(jQuery);
+
+
+$(function(){
+	if($.browser.msie){   
+        //alert("IE浏览器");
+        if($.browser.version<11){  
+            alert("您当前使用的浏览器版本过低，可能导致部分功能无法使用。推荐使用最新版本的chrome、safari、FireFox等浏览器");  
+        }  
+       // else{  
+           // alert("IE8及其以上");  
+       // }  
+    }  
+    //else if($.browser.webkit){  
+        //alert("苹果的Safari、谷歌的Chrome浏览器");   
+   // }  
+   // else if($.browser.mozilla){  
+        //alert("野狐禅FireFox浏览器");   
+   // }  
+   // else if($.browser .opera){   
+        //alert("Opera浏览器");   
+   // } 
+
+    $(".slide-nav-btn").click(function(){
+        $(".slide-nav-box").slideToggle();
+    })
+
+    //监控高度是否需要手动将copyright放最下面
+    check_copyright_ht();
+
+    //用户按钮
+    $("span.user").click(function(){
+        $(this).toggleClass("cur");
+        $(".user-ctrl").slideToggle();
+    })
+
+    //用户菜单
+    $(".slide-nav-box .user-a").click(function(){
+        $(this).toggleClass("cur");
+        $(".user-a-links").slideToggle();
+    })
+})
+
+
+function GetQueryString(name) {  
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
+    var r = window.location.search.substr(1).match(reg);  //获取url中"?"符后的字符串并正则匹配
+    var context = "";  
+    if (r != null)  
+         context = r[2];  
+    reg = null;  
+    r = null;  
+    return context == null || context == "" || context == "undefined" ? "" : context;  
+}
+
+
+function page_height_resize(){
+    $("body").css("height",$(window).height());
+    $(window).resize(function(){
+        $("body").css("height",$(window).height());
+    })
+}
+
+function swiper_fun(a,b,c){
+    var tap=0;
+    var size= a.length;
+    var ele= a.parent();
+    var w=parseInt(a.parent().parent().width());
+    b.click(function(){
+        if(tap>0){
+            tap--;
+            ele.animate({"left":-tap*w},500)
+        }
+    })
+    c.click(function(){
+        if(tap<size-1){
+            tap++;
+            ele.animate({"left":-tap*w},500)
+        }
+    })
+    $(window).resize(function(){
+        w=parseInt(a.parent().parent().width());
+        ele.animate({"left":-tap*w},500)
+    })
+}
+
+function buildJumpUrl(params, url){
+	var pathname = url || window.location.pathname;
+	var search = '';
+	var conn = '?';
+	for(var key in params){
+		if(params[key] != ''){
+			search += conn + key + '=' + encodeURI(params[key]);
+			conn = '&';
+		}
+	}
+	return pathname + search;
+}
+
+function check_copyright_ht(){
+    $(".search-main").css("minHeight",parseInt($(".tag-list-box").height())+140);
+    
+
+    if(parseInt($(window).height())>parseInt($("body").height())){
+        $(".copyright").addClass("no-more-sc")
+    }
+    else{
+        $(".copyright").removeClass("no-more-sc")
+    }
+    
+    $('.search-main').resize(function(){
+        $(".search-main").css("minHeight",parseInt($(".tag-list-box").height())+140);
+        if(parseInt($(window).height())>parseInt($("body").height())){
+            $(".copyright").addClass("no-more-sc")
+        }
+        else{
+            $(".copyright").removeClass("no-more-sc")
+        }
+    })
+    
+    $('.tag-list-box').resize(function(){
+        if(parseInt($(window).height())>parseInt($("body").height())){
+            $(".copyright").addClass("no-more-sc")
+        }
+        else{
+            $(".copyright").removeClass("no-more-sc")
+        }
+    })
+    
+    $('.search-detail').resize(function(){
+        if(parseInt($(window).height())>parseInt($("body").height())){
+            $(".copyright").addClass("no-more-sc")
+        }
+        else{
+            $(".copyright").removeClass("no-more-sc")
+        }
+    })
+    
+    $('.more-version').resize(function(){
+        if(parseInt($(window).height())>parseInt($("body").height())){
+            $(".copyright").addClass("no-more-sc")
+        }
+        else{
+            $(".copyright").removeClass("no-more-sc")
+        }
+    })
+}
+
+//定义serializeObject方法，序列化表单
+$.fn.serializeObjectWithArray = function() {
+	var o = {};
+	var a = this.serializeArray();
+	$.each(a, function() {
+		if (o[this.name]) {
+			if (!o[this.name].push) {
+				o[this.name] = [ o[this.name] ];
+			}
+			o[this.name].push(this.value || '');
+		} else {
+			o[this.name] = this.value || '';
+		}
+	});
+	return o;
+};
+
+String.prototype.startWith=function(str){    
+  var reg=new RegExp("^"+str, "i");    
+  return reg.test(this);       
+} 
+
+String.prototype.endWith=function(str){    
+  var reg=new RegExp(str+"$", "i");
+  return reg.test(this);       
+}
+
+
+//loading
+function start_loading(){
+    $("body").append('<div class="loading-box" style="position: fixed;width: 100px;height: 100px;top: 50%;left: 50%;margin: -50px 0 0 -50px;background-color: rgba(0,0,0,.3);border-radius: 10px; z-index: 666;"><img src="'+ctx+'/res/retrieval/img/timg.gif" style="position: absolute;width: 80px;height: 80px;top: 10px;left: 10px;"></div>')
+}
+function hide_loading(){
+    $(".loading-box").remove();
+}
