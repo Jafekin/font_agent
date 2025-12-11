@@ -1,15 +1,16 @@
 > *“把历史文献里的细小纹理交给机器看见，把识别到的故事交还给人。”*
 
-# 古籍影像智能识别助手
+# 基于Agentic GraphRAG实现的古文字识别分析智能体
 
-跨越千年的手稿，需要一个足够细腻的数字伙伴。这个项目基于 Django、LLM 与检索增强生成（RAG），让甲骨文、敦煌文书、金石拓片都能在浏览器中获得即时的释读和结构化报告；同时，将这些结果沉淀为可检索、可聚类的样本库，为版本研究、破损评估和修复决策提供技术支撑。
+本项目是一套基于Agentic GraphRAG实现的古文字研究工具链智能体。当前版本已完成 **Naive RAG** 基线：Chinese-CLIP 嵌入、轻量 NumPy 检索与结构化 Prompt，可以把甲骨文、敦煌文书、金石拓片转成带引用的 Markdown 或 JSON 报告；下一阶段将演进为 Agentic GraphRAG，让知识图谱与智能体协作支撑更可靠的比勘、判读与修复建议。
 
 ---
 
 ## 目录
-- [古籍影像智能识别助手](#古籍影像智能识别助手)
+- [基于Agentic GraphRAG实现的古文字识别分析智能体](#基于agentic-graphrag实现的古文字识别分析智能体)
   - [目录](#目录)
   - [功能亮点](#功能亮点)
+  - [当前里程碑](#当前里程碑)
   - [系统架构](#系统架构)
   - [运行样例](#运行样例)
   - [快速上手](#快速上手)
@@ -23,6 +24,8 @@
     - [快速使用（命令行）](#快速使用命令行)
     - [在项目中的位置](#在项目中的位置)
   - [RAG 工作流](#rag-工作流)
+  - [Agentic GraphRAG 目标](#agentic-graphrag-目标)
+  - [未完成事项](#未完成事项)
   - [项目结构](#项目结构)
   - [常见问题](#常见问题)
   - [路线图](#路线图)
@@ -34,11 +37,20 @@
 
 | 功能 | 描述 |
 | --- | --- |
-| 多模态识别 | 上传 PNG/JPG 即刻触发 ERNIE-4.5-Turbo-VL，返回结构化 Markdown 或 JSON 报告。 |
+| 多模态识别 | 上传 PNG/JPG 即刻触发 ERNIE-4.5-Turbo-VL，返回结构化 Markdown/JSON 报告。 |
 | 提示增强 | 支持年代、出处等自定义提示词，指导模型聚焦正确语境。 |
 | 历史留痕 | 自动记录分析历史，方便专家复盘与比对。 |
-| 宣纸风界面 | 原生模板提供素雅的水墨 UI，适合展陈或教学场景。 |
-| RAG 加持 | Chinese-CLIP 向量、轻量 numpy 检索与 Prompt 拼装，让大模型“带引用”地做版本判定、释读与修复建议。 |
+| 版式指纹 | PaddleOCR 驱动的布局实验室，输出列数、白口/黑口等版式指标，为版本比勘提供量化特征。 |
+| Naive RAG 管线 | Chinese-CLIP 向量、NumPy 检索与 Prompt 拼装组成的轻量 RAG，让大模型“带引用”地产出释读、版本判定和修复建议。 |
+
+---
+
+## 当前里程碑
+
+- ✅ 完成 naive RAG baseline：`rag/pipeline.py` 串联嵌入、检索、Prompt 与 LLM，默认始终返回带引用的结构化报告。
+- ✅ 数据 & 索引脚本：`scripts/build_index.py`、`scripts/bulk_ingest.py` 负责批量生成 `embeddings.npy` / `metadata.json`。
+- ✅ 版式识别实验场：`ocr/` 目录可独立调用，产出列数、白口/黑口等特征，供 RAG 上下文引用。
+- ⏳ Agentic GraphRAG：即将把版本、题名、馆藏等实体转成图谱节点，引入工具规划和回溯逻辑。
 
 ---
 
@@ -47,11 +59,11 @@
 ![alt text](doc/系统架构.jpg)
 
 关键模块：
-- **app/views.py**：HTTP 入口、文件解析、结果持久化。
-- **rag/embeddings.py**：惰性加载 Chinese-CLIP，统一生成 512 维向量。
-- **rag/retriever.py**：直接读取 `embeddings.npy` + `ids.json`，完成相似度检索与过滤。
-- **rag/prompt.py**：根据检索上下文构造 Markdown 或 JSON Prompt。
-- **rag/pipeline.py**：将检索、提示、LLM 调用串联，返回引用、得分、上下文片段等完整产物。
+- **app/views.py**：HTTP 入口、文件解析、结果持久化，串起 Web 上传与 API。
+- **rag/embeddings.py**：惰性加载 Chinese-CLIP，输出 512 维向量，是所有 RAG 变体的统一编码层。
+- **rag/retriever.py**：直接读取 `embeddings.npy`、`ids.json` 等 NumPy 索引，实现当前的 naive cosine 检索。
+- **rag/prompt.py**：根据检索上下文构造结构化 Prompt，约束输出字段、置信度与引用格式。
+- **rag/pipeline.py**：在单次调用里完成检索、Prompt 拼装、LLM 推理，是 Agentic GraphRAG 计划要替换的线性主干。
 
 ---
 
@@ -287,6 +299,8 @@
 
 ## 快速上手
 
+> 依赖 Python 3.10+、Poetry/uv 或标准 venv。以下示例默认在仓库根目录执行，naive RAG 管线开箱即用。
+
 ### uv
 
 ```bash
@@ -337,7 +351,7 @@ pip install -e .
 
 ## 环境变量
 
-添加 `.env`，填入以下字段：
+将 `.env.example` 复制为 `.env`，填入以下字段：
 
 | 变量 | 示例值 | 说明 |
 | --- | --- | --- |
@@ -442,7 +456,7 @@ python ocr/cli.py data/史记_1_100393_0065_b2425e.jpg \
 
 ## RAG 工作流
 
-本项目的 RAG（Retrieval-Augmented Generation）部分，用来把“看见的一页图像”放回完整文献语境中：先在本地向量索引里找到相似页面及其题名、版本、馆藏等元数据，再把这些上下文与当前 OCR 结果一起交给大模型，让生成的结论始终“带引用、有依据”，适合做版本判定、著录补全和修复建议等需要可追溯证据的任务。
+本项目的 RAG（Retrieval-Augmented Generation）部分，用来把“看见的一页图像”放回完整文献语境中：当前实现是一个 naive baseline，依赖本地向量索引找到相似页面及其题名、版本、馆藏等元数据，再把这些上下文与 OCR 结果一并送入 LLM，保证生成的结论“带引用、有依据”，适合做版本判定、著录补全和修复建议等需要可追溯证据的任务。
 
 1. **嵌入**：`scripts/build_index.py` 遍历 `media/uploads`，调用 `rag/embeddings.py` 生成图文向量，并保存 `embeddings.npy`、`ids.json`、`metadata.json`。
 2. **检索**：`rag/retriever.py` 直接加载这些 numpy/JSON 文件完成 Top-K 搜索，不再依赖 txtai/Faiss。
@@ -463,6 +477,39 @@ result = pipeline.run(
 print(result["analysis"])
 print(result["num_references"], result["retrieved_references"])
 ```
+
+---
+
+## Agentic GraphRAG 目标
+
+未来版本会在现有 naive 基线之上叠加“图谱 + 智能体”能力，主要阶段如下：
+
+- **图谱构建**：把 `metadata.json`、版式特征、脚注、馆藏记录转成节点/边，区分文献、卷次、版式、藏所、破损等实体，沉淀在轻量知识图谱服务（Neo4j / sqlite-graph / DuckDB+MotherDuck）。
+- **图检索 + 向量混合**：保留 Chinese-CLIP 嵌入，同时引入图遍历、路径打分与属性过滤，形成 GraphRAG 检索器，支持“先图后文”或“图文并走”的 Top-K 组合。
+- **Agentic 推理循环**：在 `rag/pipeline.py` 之上增加智能体编排（ReAct / Graph Planner），根据查询目的调度 OCR、图检索、向量检索与 LLM 多轮调用，必要时回退或追加提示。
+- **引用一致性校验**：利用图谱 ID 与版本指纹，对智能体生成的引用进行自动核验，未通过的内容可触发补检索或降级提示。
+- **可观测性**：记录每轮工具调用、图遍历路径、信心指标，为后续可视化、性能回溯与自动调参提供数据。
+
+实现这些阶段后，系统将从一次性 RAG 升级为可规划、可追踪、可增量学习的 Agentic GraphRAG 智能体。
+
+---
+
+## 未完成事项
+
+| 状态 | 任务 | 说明 |
+| --- | --- | --- |
+| ⏳ | 图谱构建器 | 依据 `metadata.json`、版式特征、馆藏链路生成知识图谱，提供 GraphRAG 所需的节点/关系存储。 |
+| ⏳ | Hybrid 检索内核 | 将现有 NumPy 检索与图遍历、属性过滤融合，支持 Top-K 混排、权重调节与实时过滤。 |
+| ⏳ | Agentic Orchestrator | 在 `rag/pipeline.py` 之外新增规划、反思、回退逻辑，支持多轮工具调用与自校验。 |
+| ⏳ | JSON-LD 标注 | 依据输出模板自动生成 JSON-LD，打通知识图谱和外部档案系统。 |
+| ⏳ | 索引增量更新 | 为 `scripts/build_index.py` 增加 watch/增量模式，避免全量重建，支持 CI/CD。 |
+| ⏳ | 结果缓存与引用可视化 | 缓存重复查询、提供 citation trace UI，便于专家复核。 |
+| ⏳ | Celery 异步流水线 | 将批量识别、索引构建与图谱计算交给分布式任务队列。 |
+| ⏳ | 多语言界面与 API 翻译 | 国际化前端 + API，兼容中文/英文用户群。 |
+
+> 欢迎通过 Issue/PR 认领上表任务，或补充新的研究方向。
+
+---
 
 ---
 
@@ -498,6 +545,7 @@ A: 调整 `scripts/build_index.py` 的分桶策略，或考虑使用 Milvus/Weav
 ## 路线图
 
 - [ ] JSON-LD 标注管线（断裂等级、修复建议、版本指纹）。
+- [ ] Agentic GraphRAG：知识图谱建模、图检索融合与智能体编排。
 - [ ] 向量索引增量更新与自动重建。
 - [ ] RAG 结果缓存与引用可视化。
 - [ ] Celery 异步任务，将批量识别与索引构建解耦。
