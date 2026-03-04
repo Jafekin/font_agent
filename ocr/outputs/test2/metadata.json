@@ -1,0 +1,13 @@
+{
+  "source_image": "ocr/test/test2.jpg",
+  "timestamp": "2026-03-04T19:22:26.214410",
+  "statistics": {
+    "line_count": 42,
+    "average_confidence": 0.9712049861495845,
+    "is_vertical": true,
+    "image_size": {
+      "width": 1920,
+      "height": 3126
+    }
+  }
+}
