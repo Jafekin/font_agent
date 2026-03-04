@@ -253,7 +253,7 @@ if __name__ == "__main__":
     client = KandiangujiOCRClient(
         token="6a750d32-b0eb-48ac-bdf8-897923e9555d", email="17324018120")
 
-    image_path = Path("./ocr/test.jpg")
+    image_path = Path("./ocr/test2.jpg")
     test_base64 = encode_image_to_base64(image_path)
     result = client.recognize_image(test_base64)
     print(result)

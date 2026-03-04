@@ -1,0 +1,4994 @@
+{
+  "data": {
+    "height": 3126,
+    "text_angel": 1,
+    "text_angel_confidence": 1.0,
+    "text_lines": [
+      {
+        "position": [
+          [
+            1628,
+            364
+          ],
+          [
+            1753,
+            362
+          ],
+          [
+            1757,
+            1060
+          ],
+          [
+            1630,
+            1062
+          ]
+        ],
+        "text": "五帝本紀第一",
+        "words": [
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9181,
+            "position": [
+              1630,
+              364,
+              1755,
+              458
+            ],
+            "text": "五"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9282,
+            "position": [
+              1634,
+              458,
+              1755,
+              598
+            ],
+            "text": "帝"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9294,
+            "position": [
+              1636,
+              600,
+              1751,
+              721
+            ],
+            "text": "本"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9312,
+            "position": [
+              1634,
+              721,
+              1753,
+              825
+            ],
+            "text": "紀"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9083,
+            "position": [
+              1638,
+              825,
+              1751,
+              981
+            ],
+            "text": "第"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.2209,
+            "position": [
+              1638,
+              975,
+              1757,
+              1062
+            ],
+            "text": "一"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1484,
+            360
+          ],
+          [
+            1607,
+            360
+          ],
+          [
+            1607,
+            668
+          ],
+          [
+            1484,
+            668
+          ]
+        ],
+        "text": "史記一",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9284,
+            "position": [
+              1490,
+              360,
+              1601,
+              479
+            ],
+            "text": "史"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9284,
+            "position": [
+              1484,
+              481,
+              1605,
+              593
+            ],
+            "text": "記"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.7307,
+            "position": [
+              1488,
+              593,
+              1607,
+              668
+            ],
+            "text": "一"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1536,
+            677
+          ],
+          [
+            1621,
+            675
+          ],
+          [
+            1634,
+            1844
+          ],
+          [
+            1548,
+            1846
+          ]
+        ],
+        "text": "凢是徐氏義稱徐姓名以别之",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.7189,
+            "position": [
+              1548,
+              677,
+              1615,
+              773
+            ],
+            "text": "凢"
+          },
+          {
+            "confidence": 0.991,
+            "det_confidence": 0.9116,
+            "position": [
+              1540,
+              777,
+              1619,
+              879
+            ],
+            "text": "是"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9078,
+            "position": [
+              1546,
+              881,
+              1621,
+              973
+            ],
+            "text": "徐"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9044,
+            "position": [
+              1553,
+              977,
+              1619,
+              1060
+            ],
+            "text": "氏"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9116,
+            "position": [
+              1555,
+              1062,
+              1623,
+              1177
+            ],
+            "text": "義"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.9206,
+            "position": [
+              1551,
+              1181,
+              1628,
+              1279
+            ],
+            "text": "稱"
+          },
+          {
+            "confidence": 0.993,
+            "det_confidence": 0.9192,
+            "position": [
+              1553,
+              1281,
+              1623,
+              1375
+            ],
+            "text": "徐"
+          },
+          {
+            "confidence": 0.992,
+            "det_confidence": 0.914,
+            "position": [
+              1546,
+              1377,
+              1621,
+              1460
+            ],
+            "text": "姓"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8988,
+            "position": [
+              1553,
+              1462,
+              1613,
+              1558
+            ],
+            "text": "名"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9016,
+            "position": [
+              1553,
+              1567,
+              1621,
+              1646
+            ],
+            "text": "以"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8942,
+            "position": [
+              1551,
+              1650,
+              1621,
+              1748
+            ],
+            "text": "别"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8485,
+            "position": [
+              1557,
+              1754,
+              1623,
+              1846
+            ],
+            "text": "之"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1473,
+            681
+          ],
+          [
+            1553,
+            679
+          ],
+          [
+            1557,
+            1852
+          ],
+          [
+            1478,
+            1854
+          ]
+        ],
+        "text": "餘者悉是駟注解并集衆家義",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.7691,
+            "position": [
+              1480,
+              681,
+              1553,
+              775
+            ],
+            "text": "餘"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8953,
+            "position": [
+              1482,
+              781,
+              1538,
+              877
+            ],
+            "text": "者"
+          },
+          {
+            "confidence": 0.892,
+            "det_confidence": 0.9072,
+            "position": [
+              1484,
+              881,
+              1546,
+              975
+            ],
+            "text": "悉"
+          },
+          {
+            "confidence": 0.987,
+            "det_confidence": 0.9054,
+            "position": [
+              1480,
+              977,
+              1551,
+              1071
+            ],
+            "text": "是"
+          },
+          {
+            "confidence": 0.923,
+            "det_confidence": 0.9043,
+            "position": [
+              1480,
+              1073,
+              1555,
+              1173
+            ],
+            "text": "駟"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9045,
+            "position": [
+              1482,
+              1179,
+              1551,
+              1273
+            ],
+            "text": "注"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9132,
+            "position": [
+              1478,
+              1277,
+              1553,
+              1375
+            ],
+            "text": "解"
+          },
+          {
+            "confidence": 0.919,
+            "det_confidence": 0.912,
+            "position": [
+              1480,
+              1377,
+              1546,
+              1462
+            ],
+            "text": "并"
+          },
+          {
+            "confidence": 0.962,
+            "det_confidence": 0.9137,
+            "position": [
+              1478,
+              1462,
+              1551,
+              1560
+            ],
+            "text": "集"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9045,
+            "position": [
+              1478,
+              1560,
+              1553,
+              1656
+            ],
+            "text": "衆"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8941,
+            "position": [
+              1484,
+              1656,
+              1551,
+              1746
+            ],
+            "text": "家"
+          },
+          {
+            "confidence": 0.99,
+            "det_confidence": 0.897,
+            "position": [
+              1484,
+              1746,
+              1557,
+              1854
+            ],
+            "text": "義"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1344,
+            364
+          ],
+          [
+            1461,
+            364
+          ],
+          [
+            1461,
+            727
+          ],
+          [
+            1344,
+            727
+          ]
+        ],
+        "text": "黄帝者",
+        "words": [
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9306,
+            "position": [
+              1346,
+              364,
+              1457,
+              493
+            ],
+            "text": "黄"
+          },
+          {
+            "confidence": 0.989,
+            "det_confidence": 0.9222,
+            "position": [
+              1344,
+              493,
+              1459,
+              608
+            ],
+            "text": "帝"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.92,
+            "position": [
+              1344,
+              610,
+              1461,
+              727
+            ],
+            "text": "者"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1400,
+            735
+          ],
+          [
+            1473,
+            735
+          ],
+          [
+            1473,
+            1027
+          ],
+          [
+            1400,
+            1027
+          ]
+        ],
+        "text": "徐廣曰",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8936,
+            "position": [
+              1405,
+              735,
+              1473,
+              831
+            ],
+            "text": "徐"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8748,
+            "position": [
+              1400,
+              835,
+              1471,
+              946
+            ],
+            "text": "廣"
+          },
+          {
+            "confidence": 0.98,
+            "det_confidence": 0.8559,
+            "position": [
+              1413,
+              954,
+              1467,
+              1027
+            ],
+            "text": "曰"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1340,
+            1044
+          ],
+          [
+            1465,
+            1044
+          ],
+          [
+            1465,
+            1802
+          ],
+          [
+            1340,
+            1802
+          ]
+        ],
+        "text": "少與之子姓公孫",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8918,
+            "position": [
+              1346,
+              1044,
+              1459,
+              1152
+            ],
+            "text": "少"
+          },
+          {
+            "confidence": 0.988,
+            "det_confidence": 0.9235,
+            "position": [
+              1344,
+              1150,
+              1467,
+              1264
+            ],
+            "text": "與"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9255,
+            "position": [
+              1344,
+              1262,
+              1463,
+              1354
+            ],
+            "text": "之"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9282,
+            "position": [
+              1348,
+              1358,
+              1467,
+              1473
+            ],
+            "text": "子"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.932,
+            "position": [
+              1342,
+              1475,
+              1467,
+              1585
+            ],
+            "text": "姓"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8829,
+            "position": [
+              1365,
+              1588,
+              1459,
+              1677
+            ],
+            "text": "公"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9231,
+            "position": [
+              1344,
+              1679,
+              1463,
+              1802
+            ],
+            "text": "孫"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1390,
+            1821
+          ],
+          [
+            1473,
+            1819
+          ],
+          [
+            1486,
+            2942
+          ],
+          [
+            1400,
+            2944
+          ]
+        ],
+        "text": "譙周曰有能國君少典之子也",
+        "words": [
+          {
+            "confidence": 0.946,
+            "det_confidence": 0.9121,
+            "position": [
+              1402,
+              1821,
+              1475,
+              1923
+            ],
+            "text": "譙"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8989,
+            "position": [
+              1402,
+              1929,
+              1469,
+              2023
+            ],
+            "text": "周"
+          },
+          {
+            "confidence": 0.992,
+            "det_confidence": 0.8879,
+            "position": [
+              1409,
+              2029,
+              1469,
+              2109
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9063,
+            "position": [
+              1409,
+              2113,
+              1475,
+              2211
+            ],
+            "text": "有"
+          },
+          {
+            "confidence": 0.5,
+            "det_confidence": 0.9109,
+            "position": [
+              1409,
+              2215,
+              1478,
+              2319
+            ],
+            "text": "能"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.902,
+            "position": [
+              1409,
+              2321,
+              1475,
+              2413
+            ],
+            "text": "國"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9013,
+            "position": [
+              1398,
+              2417,
+              1475,
+              2509
+            ],
+            "text": "君"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8975,
+            "position": [
+              1415,
+              2515,
+              1480,
+              2596
+            ],
+            "text": "少"
+          },
+          {
+            "confidence": 0.684,
+            "det_confidence": 0.8893,
+            "position": [
+              1413,
+              2598,
+              1482,
+              2694
+            ],
+            "text": "典"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8911,
+            "position": [
+              1411,
+              2700,
+              1484,
+              2771
+            ],
+            "text": "之"
+          },
+          {
+            "confidence": 0.975,
+            "det_confidence": 0.8998,
+            "position": [
+              1413,
+              2777,
+              1482,
+              2859
+            ],
+            "text": "子"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8842,
+            "position": [
+              1411,
+              2861,
+              1482,
+              2944
+            ],
+            "text": "也"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1338,
+            737
+          ],
+          [
+            1409,
+            737
+          ],
+          [
+            1409,
+            1033
+          ],
+          [
+            1338,
+            1033
+          ]
+        ],
+        "text": "號有熊",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9028,
+            "position": [
+              1340,
+              739,
+              1407,
+              835
+            ],
+            "text": "號"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.873,
+            "position": [
+              1340,
+              837,
+              1400,
+              937
+            ],
+            "text": "有"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8996,
+            "position": [
+              1342,
+              937,
+              1411,
+              1035
+            ],
+            "text": "熊"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1332,
+            1813
+          ],
+          [
+            1409,
+            1810
+          ],
+          [
+            1413,
+            2948
+          ],
+          [
+            1338,
+            2950
+          ]
+        ],
+        "text": "皇甫謐曰有能今河南新跏具",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8889,
+            "position": [
+              1340,
+              1813,
+              1398,
+              1919
+            ],
+            "text": "皇"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8967,
+            "position": [
+              1340,
+              1917,
+              1400,
+              2021
+            ],
+            "text": "甫"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9084,
+            "position": [
+              1336,
+              2025,
+              1411,
+              2115
+            ],
+            "text": "謐"
+          },
+          {
+            "confidence": 0.914,
+            "det_confidence": 0.8708,
+            "position": [
+              1344,
+              2123,
+              1402,
+              2202
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8906,
+            "position": [
+              1336,
+              2209,
+              1400,
+              2309
+            ],
+            "text": "有"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8873,
+            "position": [
+              1342,
+              2313,
+              1405,
+              2411
+            ],
+            "text": "能"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8778,
+            "position": [
+              1340,
+              2417,
+              1398,
+              2502
+            ],
+            "text": "今"
+          },
+          {
+            "confidence": 0.703,
+            "det_confidence": 0.8923,
+            "position": [
+              1342,
+              2511,
+              1413,
+              2594
+            ],
+            "text": "河"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8941,
+            "position": [
+              1342,
+              2596,
+              1407,
+              2690
+            ],
+            "text": "南"
+          },
+          {
+            "confidence": 0.987,
+            "det_confidence": 0.8949,
+            "position": [
+              1342,
+              2692,
+              1409,
+              2773
+            ],
+            "text": "新"
+          },
+          {
+            "confidence": 0.233,
+            "det_confidence": 0.8824,
+            "position": [
+              1342,
+              2777,
+              1411,
+              2863
+            ],
+            "text": "跏"
+          },
+          {
+            "confidence": 0.991,
+            "det_confidence": 0.8501,
+            "position": [
+              1344,
+              2865,
+              1409,
+              2950
+            ],
+            "text": "具"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1261,
+            2290
+          ],
+          [
+            1332,
+            2288
+          ],
+          [
+            1342,
+            2950
+          ],
+          [
+            1271,
+            2953
+          ]
+        ],
+        "text": "徐廣日墨子日年",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8937,
+            "position": [
+              1269,
+              2290,
+              1334,
+              2384
+            ],
+            "text": "徐"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8771,
+            "position": [
+              1265,
+              2386,
+              1334,
+              2492
+            ],
+            "text": "廣"
+          },
+          {
+            "confidence": 0.737,
+            "det_confidence": 0.8607,
+            "position": [
+              1271,
+              2502,
+              1334,
+              2571
+            ],
+            "text": "日"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8731,
+            "position": [
+              1273,
+              2577,
+              1338,
+              2680
+            ],
+            "text": "墨"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8802,
+            "position": [
+              1273,
+              2686,
+              1338,
+              2771
+            ],
+            "text": "子"
+          },
+          {
+            "confidence": 0.695,
+            "det_confidence": 0.8804,
+            "position": [
+              1273,
+              2775,
+              1334,
+              2844
+            ],
+            "text": "日"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8453,
+            "position": [
+              1277,
+              2848,
+              1340,
+              2953
+            ],
+            "text": "年"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1196,
+            2286
+          ],
+          [
+            1196,
+            362
+          ],
+          [
+            1325,
+            362
+          ],
+          [
+            1325,
+            2286
+          ]
+        ],
+        "text": "也名曰軒轅生而神靈弱而能言幼而徇齊",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8942,
+            "position": [
+              1240,
+              362,
+              1325,
+              450
+            ],
+            "text": "也"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9117,
+            "position": [
+              1202,
+              464,
+              1302,
+              583
+            ],
+            "text": "名"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9092,
+            "position": [
+              1211,
+              585,
+              1307,
+              681
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.9308,
+            "position": [
+              1200,
+              689,
+              1319,
+              812
+            ],
+            "text": "軒"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9321,
+            "position": [
+              1200,
+              812,
+              1325,
+              935
+            ],
+            "text": "轅"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9222,
+            "position": [
+              1198,
+              937,
+              1311,
+              1039
+            ],
+            "text": "生"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9174,
+            "position": [
+              1204,
+              1042,
+              1315,
+              1139
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9312,
+            "position": [
+              1200,
+              1142,
+              1317,
+              1258
+            ],
+            "text": "神"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.93,
+            "position": [
+              1202,
+              1258,
+              1315,
+              1385
+            ],
+            "text": "靈"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9198,
+            "position": [
+              1207,
+              1385,
+              1311,
+              1498
+            ],
+            "text": "弱"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9277,
+            "position": [
+              1207,
+              1500,
+              1315,
+              1596
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9368,
+            "position": [
+              1209,
+              1596,
+              1317,
+              1717
+            ],
+            "text": "能"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9225,
+            "position": [
+              1204,
+              1719,
+              1315,
+              1829
+            ],
+            "text": "言"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9278,
+            "position": [
+              1209,
+              1829,
+              1319,
+              1933
+            ],
+            "text": "幼"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9222,
+            "position": [
+              1209,
+              1933,
+              1317,
+              2025
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9269,
+            "position": [
+              1202,
+              2029,
+              1319,
+              2148
+            ],
+            "text": "徇"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.924,
+            "position": [
+              1198,
+              2148,
+              1327,
+              2288
+            ],
+            "text": "齊"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1186,
+            2290
+          ],
+          [
+            1269,
+            2288
+          ],
+          [
+            1275,
+            2946
+          ],
+          [
+            1192,
+            2948
+          ]
+        ],
+        "text": "踰十五則璁明心",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8969,
+            "position": [
+              1196,
+              2290,
+              1269,
+              2388
+            ],
+            "text": "踰"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8828,
+            "position": [
+              1196,
+              2394,
+              1265,
+              2488
+            ],
+            "text": "十"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8799,
+            "position": [
+              1194,
+              2496,
+              1269,
+              2573
+            ],
+            "text": "五"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8794,
+            "position": [
+              1194,
+              2579,
+              1265,
+              2669
+            ],
+            "text": "則"
+          },
+          {
+            "confidence": 0.307,
+            "det_confidence": 0.8998,
+            "position": [
+              1192,
+              2675,
+              1273,
+              2771
+            ],
+            "text": "璁"
+          },
+          {
+            "confidence": 0.93,
+            "det_confidence": 0.8854,
+            "position": [
+              1200,
+              2775,
+              1269,
+              2861
+            ],
+            "text": "明"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.7388,
+            "position": [
+              1196,
+              2871,
+              1275,
+              2948
+            ],
+            "text": "心"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1102,
+            362
+          ],
+          [
+            1182,
+            360
+          ],
+          [
+            1188,
+            1429
+          ],
+          [
+            1106,
+            1431
+          ]
+        ],
+        "text": "黨無不徇通矣駰案徇疾齊",
+        "words": [
+          {
+            "confidence": 0.476,
+            "det_confidence": 0.5199,
+            "position": [
+              1113,
+              362,
+              1179,
+              470
+            ],
+            "text": "黨"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9023,
+            "position": [
+              1111,
+              479,
+              1184,
+              566
+            ],
+            "text": "無"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8986,
+            "position": [
+              1115,
+              573,
+              1179,
+              650
+            ],
+            "text": "不"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9026,
+            "position": [
+              1111,
+              652,
+              1179,
+              750
+            ],
+            "text": "徇"
+          },
+          {
+            "confidence": 0.892,
+            "det_confidence": 0.9018,
+            "position": [
+              1115,
+              754,
+              1179,
+              852
+            ],
+            "text": "通"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8901,
+            "position": [
+              1117,
+              856,
+              1182,
+              956
+            ],
+            "text": "矣"
+          },
+          {
+            "confidence": 0.985,
+            "det_confidence": 0.895,
+            "position": [
+              1106,
+              960,
+              1182,
+              1046
+            ],
+            "text": "駰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9146,
+            "position": [
+              1113,
+              1048,
+              1182,
+              1146
+            ],
+            "text": "案"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8936,
+            "position": [
+              1113,
+              1150,
+              1179,
+              1244
+            ],
+            "text": "徇"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9089,
+            "position": [
+              1111,
+              1244,
+              1186,
+              1331
+            ],
+            "text": "疾"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9079,
+            "position": [
+              1109,
+              1331,
+              1188,
+              1431
+            ],
+            "text": "齊"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1040,
+            364
+          ],
+          [
+            1113,
+            364
+          ],
+          [
+            1113,
+            1329
+          ],
+          [
+            1040,
+            1329
+          ]
+        ],
+        "text": "速也言聖德幼而疾速也",
+        "words": [
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.652,
+            "position": [
+              1044,
+              364,
+              1111,
+              468
+            ],
+            "text": "速"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8886,
+            "position": [
+              1042,
+              477,
+              1109,
+              562
+            ],
+            "text": "也"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.888,
+            "position": [
+              1042,
+              566,
+              1106,
+              660
+            ],
+            "text": "言"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8947,
+            "position": [
+              1044,
+              660,
+              1109,
+              756
+            ],
+            "text": "聖"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9131,
+            "position": [
+              1042,
+              756,
+              1111,
+              852
+            ],
+            "text": "德"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9039,
+            "position": [
+              1046,
+              856,
+              1111,
+              952
+            ],
+            "text": "幼"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8926,
+            "position": [
+              1046,
+              956,
+              1104,
+              1042
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9144,
+            "position": [
+              1040,
+              1046,
+              1111,
+              1142
+            ],
+            "text": "疾"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9095,
+            "position": [
+              1042,
+              1144,
+              1113,
+              1244
+            ],
+            "text": "速"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8804,
+            "position": [
+              1046,
+              1246,
+              1111,
+              1329
+            ],
+            "text": "也"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            1046,
+            2950
+          ],
+          [
+            1050,
+            1433
+          ],
+          [
+            1186,
+            1435
+          ],
+          [
+            1182,
+            2953
+          ]
+        ],
+        "text": "長而敦敏成而聦明軒轅之時神",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9191,
+            "position": [
+              1056,
+              1435,
+              1175,
+              1556
+            ],
+            "text": "長"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9185,
+            "position": [
+              1059,
+              1560,
+              1171,
+              1671
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9332,
+            "position": [
+              1052,
+              1675,
+              1177,
+              1804
+            ],
+            "text": "敦"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9359,
+            "position": [
+              1054,
+              1804,
+              1186,
+              1925
+            ],
+            "text": "敏"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9237,
+            "position": [
+              1056,
+              1925,
+              1177,
+              2044
+            ],
+            "text": "成"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9223,
+            "position": [
+              1061,
+              2044,
+              1171,
+              2144
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9345,
+            "position": [
+              1054,
+              2146,
+              1179,
+              2259
+            ],
+            "text": "聦"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9249,
+            "position": [
+              1061,
+              2261,
+              1171,
+              2369
+            ],
+            "text": "明"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9305,
+            "position": [
+              1056,
+              2371,
+              1182,
+              2492
+            ],
+            "text": "軒"
+          },
+          {
+            "confidence": 0.818,
+            "det_confidence": 0.9213,
+            "position": [
+              1048,
+              2492,
+              1177,
+              2611
+            ],
+            "text": "轅"
+          },
+          {
+            "confidence": 0.996,
+            "det_confidence": 0.8956,
+            "position": [
+              1056,
+              2611,
+              1179,
+              2702
+            ],
+            "text": "之"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9238,
+            "position": [
+              1059,
+              2702,
+              1184,
+              2830
+            ],
+            "text": "時"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9181,
+            "position": [
+              1056,
+              2832,
+              1177,
+              2953
+            ],
+            "text": "神"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            892,
+            360
+          ],
+          [
+            1023,
+            358
+          ],
+          [
+            1029,
+            825
+          ],
+          [
+            896,
+            827
+          ]
+        ],
+        "text": "農氏世衰",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9205,
+            "position": [
+              894,
+              360,
+              1025,
+              510
+            ],
+            "text": "農"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9182,
+            "position": [
+              908,
+              508,
+              1021,
+              608
+            ],
+            "text": "氏"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9119,
+            "position": [
+              911,
+              606,
+              1021,
+              700
+            ],
+            "text": "世"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9216,
+            "position": [
+              904,
+              702,
+              1029,
+              827
+            ],
+            "text": "衰"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            956,
+            846
+          ],
+          [
+            1036,
+            844
+          ],
+          [
+            1042,
+            2271
+          ],
+          [
+            963,
+            2273
+          ]
+        ],
+        "text": "皇甫謐曰易稱庖犧氏没神農氏作是",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8967,
+            "position": [
+              969,
+              846,
+              1036,
+              944
+            ],
+            "text": "皇"
+          },
+          {
+            "confidence": 0.761,
+            "det_confidence": 0.9064,
+            "position": [
+              967,
+              944,
+              1034,
+              1044
+            ],
+            "text": "甫"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.909,
+            "position": [
+              958,
+              1048,
+              1036,
+              1148
+            ],
+            "text": "謐"
+          },
+          {
+            "confidence": 0.966,
+            "det_confidence": 0.8724,
+            "position": [
+              971,
+              1152,
+              1034,
+              1225
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9013,
+            "position": [
+              965,
+              1229,
+              1034,
+              1327
+            ],
+            "text": "易"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9186,
+            "position": [
+              961,
+              1331,
+              1040,
+              1421
+            ],
+            "text": "稱"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9128,
+            "position": [
+              963,
+              1423,
+              1040,
+              1521
+            ],
+            "text": "庖"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9158,
+            "position": [
+              961,
+              1523,
+              1040,
+              1633
+            ],
+            "text": "犧"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9013,
+            "position": [
+              971,
+              1633,
+              1038,
+              1715
+            ],
+            "text": "氏"
+          },
+          {
+            "confidence": 0.977,
+            "det_confidence": 0.906,
+            "position": [
+              969,
+              1717,
+              1040,
+              1804
+            ],
+            "text": "没"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8903,
+            "position": [
+              969,
+              1804,
+              1038,
+              1894
+            ],
+            "text": "神"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9001,
+            "position": [
+              973,
+              1898,
+              1042,
+              2006
+            ],
+            "text": "農"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8972,
+            "position": [
+              973,
+              2008,
+              1040,
+              2084
+            ],
+            "text": "氏"
+          },
+          {
+            "confidence": 0.917,
+            "det_confidence": 0.8929,
+            "position": [
+              973,
+              2084,
+              1042,
+              2173
+            ],
+            "text": "作"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8932,
+            "position": [
+              975,
+              2175,
+              1040,
+              2273
+            ],
+            "text": "是"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            890,
+            844
+          ],
+          [
+            969,
+            841
+          ],
+          [
+            973,
+            2281
+          ],
+          [
+            894,
+            2284
+          ]
+        ],
+        "text": "爲炎谛班固曰敎民耕農故號曰神農",
+        "words": [
+          {
+            "confidence": 0.994,
+            "det_confidence": 0.9055,
+            "position": [
+              900,
+              844,
+              967,
+              941
+            ],
+            "text": "爲"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9107,
+            "position": [
+              894,
+              941,
+              965,
+              1037
+            ],
+            "text": "炎"
+          },
+          {
+            "confidence": 0.513,
+            "det_confidence": 0.898,
+            "position": [
+              894,
+              1037,
+              956,
+              1148
+            ],
+            "text": "谛"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9063,
+            "position": [
+              896,
+              1160,
+              971,
+              1242
+            ],
+            "text": "班"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8904,
+            "position": [
+              902,
+              1244,
+              965,
+              1331
+            ],
+            "text": "固"
+          },
+          {
+            "confidence": 0.976,
+            "det_confidence": 0.8787,
+            "position": [
+              900,
+              1342,
+              958,
+              1419
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9032,
+            "position": [
+              892,
+              1423,
+              965,
+              1531
+            ],
+            "text": "敎"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8902,
+            "position": [
+              894,
+              1533,
+              963,
+              1625
+            ],
+            "text": "民"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.9086,
+            "position": [
+              896,
+              1627,
+              971,
+              1723
+            ],
+            "text": "耕"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8996,
+            "position": [
+              898,
+              1723,
+              967,
+              1831
+            ],
+            "text": "農"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9053,
+            "position": [
+              898,
+              1827,
+              969,
+              1908
+            ],
+            "text": "故"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.915,
+            "position": [
+              900,
+              1908,
+              973,
+              2006
+            ],
+            "text": "號"
+          },
+          {
+            "confidence": 0.952,
+            "det_confidence": 0.8892,
+            "position": [
+              906,
+              2011,
+              965,
+              2077
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8984,
+            "position": [
+              906,
+              2081,
+              973,
+              2173
+            ],
+            "text": "神"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9076,
+            "position": [
+              902,
+              2173,
+              971,
+              2284
+            ],
+            "text": "農"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            908,
+            2286
+          ],
+          [
+            1038,
+            2284
+          ],
+          [
+            1042,
+            2946
+          ],
+          [
+            913,
+            2948
+          ]
+        ],
+        "text": "諸侯相侵伐暴",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9302,
+            "position": [
+              911,
+              2286,
+              1036,
+              2396
+            ],
+            "text": "諸"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.9318,
+            "position": [
+              911,
+              2398,
+              1040,
+              2507
+            ],
+            "text": "侯"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9235,
+            "position": [
+              917,
+              2511,
+              1036,
+              2613
+            ],
+            "text": "相"
+          },
+          {
+            "confidence": 0.993,
+            "det_confidence": 0.9274,
+            "position": [
+              913,
+              2613,
+              1034,
+              2723
+            ],
+            "text": "侵"
+          },
+          {
+            "confidence": 0.593,
+            "det_confidence": 0.9015,
+            "position": [
+              913,
+              2725,
+              1036,
+              2823
+            ],
+            "text": "伐"
+          },
+          {
+            "confidence": 0.995,
+            "det_confidence": 0.923,
+            "position": [
+              919,
+              2823,
+              1042,
+              2948
+            ],
+            "text": "暴"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            748,
+            364
+          ],
+          [
+            877,
+            362
+          ],
+          [
+            890,
+            2950
+          ],
+          [
+            760,
+            2953
+          ]
+        ],
+        "text": "虐百姓而神農氏弗能征於是軒轅乃習用干戈目征不享",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9328,
+            "position": [
+              752,
+              364,
+              873,
+              487
+            ],
+            "text": "虐"
+          },
+          {
+            "confidence": 0.993,
+            "det_confidence": 0.9232,
+            "position": [
+              760,
+              489,
+              871,
+              591
+            ],
+            "text": "百"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9356,
+            "position": [
+              756,
+              593,
+              877,
+              702
+            ],
+            "text": "姓"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9242,
+            "position": [
+              762,
+              704,
+              875,
+              804
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9325,
+            "position": [
+              752,
+              808,
+              875,
+              923
+            ],
+            "text": "神"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.925,
+            "position": [
+              758,
+              923,
+              879,
+              1064
+            ],
+            "text": "農"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9263,
+            "position": [
+              769,
+              1062,
+              875,
+              1158
+            ],
+            "text": "氏"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9307,
+            "position": [
+              767,
+              1156,
+              879,
+              1279
+            ],
+            "text": "弗"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9353,
+            "position": [
+              769,
+              1281,
+              877,
+              1400
+            ],
+            "text": "能"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9308,
+            "position": [
+              762,
+              1402,
+              879,
+              1502
+            ],
+            "text": "征"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9291,
+            "position": [
+              765,
+              1502,
+              875,
+              1606
+            ],
+            "text": "於"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.932,
+            "position": [
+              760,
+              1606,
+              883,
+              1721
+            ],
+            "text": "是"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9344,
+            "position": [
+              756,
+              1721,
+              881,
+              1836
+            ],
+            "text": "軒"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9346,
+            "position": [
+              760,
+              1836,
+              885,
+              1958
+            ],
+            "text": "轅"
+          },
+          {
+            "confidence": 0.988,
+            "det_confidence": 0.9245,
+            "position": [
+              767,
+              1958,
+              871,
+              2054
+            ],
+            "text": "乃"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.922,
+            "position": [
+              771,
+              2056,
+              871,
+              2173
+            ],
+            "text": "習"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9268,
+            "position": [
+              767,
+              2175,
+              873,
+              2290
+            ],
+            "text": "用"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.918,
+            "position": [
+              765,
+              2292,
+              881,
+              2396
+            ],
+            "text": "干"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9176,
+            "position": [
+              779,
+              2396,
+              885,
+              2502
+            ],
+            "text": "戈"
+          },
+          {
+            "confidence": 0.556,
+            "det_confidence": 0.8938,
+            "position": [
+              781,
+              2502,
+              873,
+              2611
+            ],
+            "text": "目"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9272,
+            "position": [
+              771,
+              2613,
+              890,
+              2717
+            ],
+            "text": "征"
+          },
+          {
+            "confidence": 0.996,
+            "det_confidence": 0.925,
+            "position": [
+              765,
+              2717,
+              885,
+              2813
+            ],
+            "text": "不"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9255,
+            "position": [
+              775,
+              2813,
+              890,
+              2953
+            ],
+            "text": "享"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            604,
+            366
+          ],
+          [
+            737,
+            364
+          ],
+          [
+            746,
+            2065
+          ],
+          [
+            612,
+            2067
+          ]
+        ],
+        "text": "諸侯咸來賔從而蚩尤最爲暴莫能伐",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9307,
+            "position": [
+              608,
+              366,
+              731,
+              483
+            ],
+            "text": "諸"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9292,
+            "position": [
+              606,
+              483,
+              737,
+              591
+            ],
+            "text": "侯"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9256,
+            "position": [
+              610,
+              589,
+              733,
+              708
+            ],
+            "text": "咸"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9279,
+            "position": [
+              608,
+              706,
+              740,
+              823
+            ],
+            "text": "來"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9325,
+            "position": [
+              608,
+              827,
+              729,
+              966
+            ],
+            "text": "賔"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9316,
+            "position": [
+              610,
+              964,
+              733,
+              1069
+            ],
+            "text": "從"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.927,
+            "position": [
+              619,
+              1069,
+              725,
+              1162
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9206,
+            "position": [
+              619,
+              1167,
+              721,
+              1285
+            ],
+            "text": "蚩"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.9255,
+            "position": [
+              619,
+              1285,
+              735,
+              1377
+            ],
+            "text": "尤"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9284,
+            "position": [
+              612,
+              1377,
+              737,
+              1506
+            ],
+            "text": "最"
+          },
+          {
+            "confidence": 0.703,
+            "det_confidence": 0.9153,
+            "position": [
+              614,
+              1508,
+              731,
+              1615
+            ],
+            "text": "爲"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9314,
+            "position": [
+              621,
+              1617,
+              740,
+              1740
+            ],
+            "text": "暴"
+          },
+          {
+            "confidence": 0.995,
+            "det_confidence": 0.9254,
+            "position": [
+              619,
+              1742,
+              740,
+              1865
+            ],
+            "text": "莫"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9205,
+            "position": [
+              619,
+              1863,
+              733,
+              1969
+            ],
+            "text": "能"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9236,
+            "position": [
+              614,
+              1967,
+              737,
+              2067
+            ],
+            "text": "伐"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            667,
+            2075
+          ],
+          [
+            750,
+            2073
+          ],
+          [
+            758,
+            2944
+          ],
+          [
+            675,
+            2946
+          ]
+        ],
+        "text": "應劭曰蚩尤古天子瓚",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.918,
+            "position": [
+              669,
+              2075,
+              752,
+              2175
+            ],
+            "text": "應"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9068,
+            "position": [
+              679,
+              2179,
+              748,
+              2269
+            ],
+            "text": "劭"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.8909,
+            "position": [
+              681,
+              2275,
+              744,
+              2346
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8909,
+            "position": [
+              679,
+              2346,
+              746,
+              2440
+            ],
+            "text": "蚩"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8875,
+            "position": [
+              685,
+              2444,
+              750,
+              2523
+            ],
+            "text": "尤"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.8763,
+            "position": [
+              681,
+              2534,
+              752,
+              2632
+            ],
+            "text": "古"
+          },
+          {
+            "confidence": 0.995,
+            "det_confidence": 0.8959,
+            "position": [
+              681,
+              2638,
+              752,
+              2721
+            ],
+            "text": "天"
+          },
+          {
+            "confidence": 0.986,
+            "det_confidence": 0.8966,
+            "position": [
+              685,
+              2732,
+              754,
+              2827
+            ],
+            "text": "子"
+          },
+          {
+            "confidence": 0.89,
+            "det_confidence": 0.905,
+            "position": [
+              683,
+              2832,
+              758,
+              2946
+            ],
+            "text": "瓚"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            606,
+            2081
+          ],
+          [
+            677,
+            2079
+          ],
+          [
+            681,
+            2919
+          ],
+          [
+            608,
+            2921
+          ]
+        ],
+        "text": "三孔子三朝許曰蚩优",
+        "words": [
+          {
+            "confidence": 0.778,
+            "det_confidence": 0.8641,
+            "position": [
+              612,
+              2081,
+              669,
+              2156
+            ],
+            "text": "三"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8845,
+            "position": [
+              608,
+              2161,
+              677,
+              2250
+            ],
+            "text": "孔"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8917,
+            "position": [
+              610,
+              2261,
+              679,
+              2348
+            ],
+            "text": "子"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8706,
+            "position": [
+              612,
+              2354,
+              679,
+              2434
+            ],
+            "text": "三"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9078,
+            "position": [
+              608,
+              2442,
+              679,
+              2542
+            ],
+            "text": "朝"
+          },
+          {
+            "confidence": 0.679,
+            "det_confidence": 0.8867,
+            "position": [
+              610,
+              2544,
+              677,
+              2640
+            ],
+            "text": "許"
+          },
+          {
+            "confidence": 0.986,
+            "det_confidence": 0.8844,
+            "position": [
+              617,
+              2652,
+              677,
+              2723
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9001,
+            "position": [
+              610,
+              2727,
+              681,
+              2827
+            ],
+            "text": "蚩"
+          },
+          {
+            "confidence": 0.539,
+            "det_confidence": 0.8736,
+            "position": [
+              610,
+              2832,
+              679,
+              2921
+            ],
+            "text": "优"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            514,
+            375
+          ],
+          [
+            587,
+            373
+          ],
+          [
+            594,
+            658
+          ],
+          [
+            519,
+            660
+          ]
+        ],
+        "text": "庶人之",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.892,
+            "position": [
+              519,
+              375,
+              589,
+              475
+            ],
+            "text": "庶"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.8647,
+            "position": [
+              519,
+              485,
+              592,
+              562
+            ],
+            "text": "人"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8675,
+            "position": [
+              521,
+              587,
+              594,
+              660
+            ],
+            "text": "之"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            450,
+            373
+          ],
+          [
+            521,
+            373
+          ],
+          [
+            521,
+            583
+          ],
+          [
+            450,
+            583
+          ]
+        ],
+        "text": "貪者",
+        "words": [
+          {
+            "confidence": 0.966,
+            "det_confidence": 0.9031,
+            "position": [
+              450,
+              375,
+              521,
+              489
+            ],
+            "text": "貪"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8986,
+            "position": [
+              450,
+              491,
+              517,
+              585
+            ],
+            "text": "者"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            458,
+            677
+          ],
+          [
+            592,
+            675
+          ],
+          [
+            602,
+            2959
+          ],
+          [
+            469,
+            2961
+          ]
+        ],
+        "text": "炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9287,
+            "position": [
+              464,
+              677,
+              585,
+              798
+            ],
+            "text": "炎"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9325,
+            "position": [
+              466,
+              798,
+              583,
+              923
+            ],
+            "text": "帝"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9334,
+            "position": [
+              464,
+              925,
+              589,
+              1039
+            ],
+            "text": "欲"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9369,
+            "position": [
+              462,
+              1039,
+              594,
+              1160
+            ],
+            "text": "侵"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9366,
+            "position": [
+              466,
+              1160,
+              596,
+              1279
+            ],
+            "text": "陵"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9361,
+            "position": [
+              464,
+              1281,
+              592,
+              1398
+            ],
+            "text": "諸"
+          },
+          {
+            "confidence": 0.996,
+            "det_confidence": 0.9351,
+            "position": [
+              464,
+              1398,
+              596,
+              1504
+            ],
+            "text": "侯"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.932,
+            "position": [
+              466,
+              1502,
+              594,
+              1619
+            ],
+            "text": "諸"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9318,
+            "position": [
+              469,
+              1621,
+              594,
+              1729
+            ],
+            "text": "侯"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9281,
+            "position": [
+              471,
+              1727,
+              589,
+              1838
+            ],
+            "text": "咸"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9349,
+            "position": [
+              475,
+              1836,
+              592,
+              1963
+            ],
+            "text": "歸"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9346,
+            "position": [
+              471,
+              1963,
+              596,
+              2079
+            ],
+            "text": "軒"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.936,
+            "position": [
+              473,
+              2079,
+              600,
+              2196
+            ],
+            "text": "轅"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9314,
+            "position": [
+              471,
+              2200,
+              596,
+              2319
+            ],
+            "text": "軒"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9314,
+            "position": [
+              475,
+              2317,
+              598,
+              2434
+            ],
+            "text": "轅"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9178,
+            "position": [
+              477,
+              2436,
+              581,
+              2527
+            ],
+            "text": "乃"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9295,
+            "position": [
+              471,
+              2529,
+              600,
+              2634
+            ],
+            "text": "修"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9321,
+            "position": [
+              473,
+              2634,
+              598,
+              2748
+            ],
+            "text": "德"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.9353,
+            "position": [
+              475,
+              2748,
+              602,
+              2852
+            ],
+            "text": "振"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9284,
+            "position": [
+              479,
+              2852,
+              600,
+              2961
+            ],
+            "text": "兵"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            314,
+            375
+          ],
+          [
+            437,
+            373
+          ],
+          [
+            439,
+            696
+          ],
+          [
+            318,
+            698
+          ]
+        ],
+        "text": "治五氣",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9173,
+            "position": [
+              316,
+              375,
+              421,
+              487
+            ],
+            "text": "治"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9098,
+            "position": [
+              321,
+              487,
+              433,
+              571
+            ],
+            "text": "五"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9321,
+            "position": [
+              318,
+              573,
+              439,
+              698
+            ],
+            "text": "氣"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            375,
+            708
+          ],
+          [
+            450,
+            708
+          ],
+          [
+            450,
+            1067
+          ],
+          [
+            375,
+            1067
+          ]
+        ],
+        "text": "王肅曰五",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8774,
+            "position": [
+              379,
+              708,
+              448,
+              781
+            ],
+            "text": "王"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8993,
+            "position": [
+              377,
+              783,
+              448,
+              896
+            ],
+            "text": "肅"
+          },
+          {
+            "confidence": 0.99,
+            "det_confidence": 0.8799,
+            "position": [
+              383,
+              904,
+              448,
+              981
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.8814,
+            "position": [
+              375,
+              991,
+              450,
+              1067
+            ],
+            "text": "五"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            377,
+            1427
+          ],
+          [
+            460,
+            1425
+          ],
+          [
+            462,
+            2738
+          ],
+          [
+            381,
+            2740
+          ]
+        ],
+        "text": "蓺樹也詩云蓺之荏菽周禮曰穀冝",
+        "words": [
+          {
+            "confidence": 0.951,
+            "det_confidence": 0.9056,
+            "position": [
+              381,
+              1427,
+              454,
+              1527
+            ],
+            "text": "蓺"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9172,
+            "position": [
+              383,
+              1529,
+              458,
+              1623
+            ],
+            "text": "樹"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9088,
+            "position": [
+              381,
+              1625,
+              454,
+              1708
+            ],
+            "text": "也"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.917,
+            "position": [
+              379,
+              1710,
+              454,
+              1815
+            ],
+            "text": "詩"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9009,
+            "position": [
+              389,
+              1819,
+              454,
+              1900
+            ],
+            "text": "云"
+          },
+          {
+            "confidence": 0.676,
+            "det_confidence": 0.896,
+            "position": [
+              385,
+              1904,
+              458,
+              2006
+            ],
+            "text": "蓺"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8923,
+            "position": [
+              394,
+              2015,
+              456,
+              2088
+            ],
+            "text": "之"
+          },
+          {
+            "confidence": 0.843,
+            "det_confidence": 0.9058,
+            "position": [
+              389,
+              2090,
+              458,
+              2184
+            ],
+            "text": "荏"
+          },
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.9035,
+            "position": [
+              389,
+              2190,
+              462,
+              2292
+            ],
+            "text": "菽"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8929,
+            "position": [
+              396,
+              2296,
+              458,
+              2384
+            ],
+            "text": "周"
+          },
+          {
+            "confidence": 0.983,
+            "det_confidence": 0.9063,
+            "position": [
+              389,
+              2388,
+              462,
+              2488
+            ],
+            "text": "禮"
+          },
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.8716,
+            "position": [
+              394,
+              2492,
+              454,
+              2565
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 0.915,
+            "det_confidence": 0.8978,
+            "position": [
+              381,
+              2569,
+              460,
+              2659
+            ],
+            "text": "穀"
+          },
+          {
+            "confidence": 0.654,
+            "det_confidence": 0.8993,
+            "position": [
+              383,
+              2661,
+              456,
+              2740
+            ],
+            "text": "冝"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            302,
+            716
+          ],
+          [
+            377,
+            714
+          ],
+          [
+            381,
+            1000
+          ],
+          [
+            306,
+            1002
+          ]
+        ],
+        "text": "行之氣",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8917,
+            "position": [
+              304,
+              716,
+              379,
+              808
+            ],
+            "text": "行"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8873,
+            "position": [
+              310,
+              810,
+              375,
+              894
+            ],
+            "text": "之"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8951,
+            "position": [
+              312,
+              896,
+              381,
+              1002
+            ],
+            "text": "氣"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            329,
+            2742
+          ],
+          [
+            458,
+            2742
+          ],
+          [
+            458,
+            2965
+          ],
+          [
+            329,
+            2965
+          ]
+        ],
+        "text": "撫萬",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9334,
+            "position": [
+              329,
+              2742,
+              458,
+              2842
+            ],
+            "text": "撫"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9247,
+            "position": [
+              337,
+              2842,
+              448,
+              2965
+            ],
+            "text": "萬"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            314,
+            1410
+          ],
+          [
+            314,
+            1067
+          ],
+          [
+            441,
+            1067
+          ],
+          [
+            441,
+            1410
+          ]
+        ],
+        "text": "蓺五種",
+        "words": [
+          {
+            "confidence": 0.915,
+            "det_confidence": 0.9289,
+            "position": [
+              316,
+              1069,
+              444,
+              1206
+            ],
+            "text": "蓺"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.925,
+            "position": [
+              323,
+              1208,
+              439,
+              1300
+            ],
+            "text": "五"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.928,
+            "position": [
+              316,
+              1300,
+              441,
+              1412
+            ],
+            "text": "種"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            304,
+            1435
+          ],
+          [
+            387,
+            1433
+          ],
+          [
+            398,
+            2665
+          ],
+          [
+            314,
+            2667
+          ]
+        ],
+        "text": "五種尊玄曰五種黍稷菽麥稻也",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8786,
+            "position": [
+              314,
+              1435,
+              381,
+              1515
+            ],
+            "text": "五"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9088,
+            "position": [
+              310,
+              1519,
+              383,
+              1617
+            ],
+            "text": "種"
+          },
+          {
+            "confidence": 0.613,
+            "det_confidence": 0.9101,
+            "position": [
+              308,
+              1621,
+              381,
+              1723
+            ],
+            "text": "尊"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8916,
+            "position": [
+              316,
+              1727,
+              373,
+              1810
+            ],
+            "text": "玄"
+          },
+          {
+            "confidence": 0.835,
+            "det_confidence": 0.8612,
+            "position": [
+              318,
+              1819,
+              377,
+              1896
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.889,
+            "position": [
+              316,
+              1908,
+              383,
+              1992
+            ],
+            "text": "五"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.906,
+            "position": [
+              316,
+              2004,
+              391,
+              2092
+            ],
+            "text": "種"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.913,
+            "position": [
+              312,
+              2096,
+              387,
+              2196
+            ],
+            "text": "黍"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9128,
+            "position": [
+              316,
+              2202,
+              389,
+              2294
+            ],
+            "text": "稷"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9017,
+            "position": [
+              316,
+              2296,
+              396,
+              2386
+            ],
+            "text": "菽"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9099,
+            "position": [
+              314,
+              2390,
+              387,
+              2492
+            ],
+            "text": "麥"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9056,
+            "position": [
+              316,
+              2494,
+              389,
+              2575
+            ],
+            "text": "稻"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8816,
+            "position": [
+              316,
+              2588,
+              381,
+              2667
+            ],
+            "text": "也"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            235,
+            814
+          ],
+          [
+            306,
+            814
+          ],
+          [
+            306,
+            1233
+          ],
+          [
+            235,
+            1233
+          ]
+        ],
+        "text": "王肅曰度四",
+        "words": [
+          {
+            "confidence": 0.989,
+            "det_confidence": 0.8947,
+            "position": [
+              235,
+              814,
+              300,
+              883
+            ],
+            "text": "王"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9037,
+            "position": [
+              237,
+              887,
+              302,
+              998
+            ],
+            "text": "肅"
+          },
+          {
+            "confidence": 0.994,
+            "det_confidence": 0.8788,
+            "position": [
+              239,
+              1000,
+              300,
+              1067
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.89,
+            "position": [
+              237,
+              1067,
+              306,
+              1167
+            ],
+            "text": "度"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8569,
+            "position": [
+              235,
+              1175,
+              300,
+              1233
+            ],
+            "text": "四"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            166,
+            816
+          ],
+          [
+            239,
+            816
+          ],
+          [
+            239,
+            1233
+          ],
+          [
+            166,
+            1233
+          ]
+        ],
+        "text": "方而安撫之",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8963,
+            "position": [
+              166,
+              816,
+              231,
+              898
+            ],
+            "text": "方"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8875,
+            "position": [
+              168,
+              900,
+              231,
+              987
+            ],
+            "text": "而"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8958,
+            "position": [
+              168,
+              989,
+              237,
+              1073
+            ],
+            "text": "安"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9004,
+            "position": [
+              166,
+              1075,
+              239,
+              1156
+            ],
+            "text": "撫"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8801,
+            "position": [
+              173,
+              1169,
+              235,
+              1233
+            ],
+            "text": "之"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            166,
+            1246
+          ],
+          [
+            302,
+            1244
+          ],
+          [
+            312,
+            2950
+          ],
+          [
+            175,
+            2953
+          ]
+        ],
+        "text": "敎熊羆貔貅軀虎以與炎帝戰於阪泉",
+        "words": [
+          {
+            "confidence": 0.997,
+            "det_confidence": 0.9275,
+            "position": [
+              173,
+              1246,
+              304,
+              1371
+            ],
+            "text": "敎"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9236,
+            "position": [
+              181,
+              1371,
+              287,
+              1492
+            ],
+            "text": "熊"
+          },
+          {
+            "confidence": 0.988,
+            "det_confidence": 0.9206,
+            "position": [
+              183,
+              1492,
+              287,
+              1617
+            ],
+            "text": "羆"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9296,
+            "position": [
+              177,
+              1615,
+              298,
+              1725
+            ],
+            "text": "貔"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9359,
+            "position": [
+              175,
+              1725,
+              306,
+              1833
+            ],
+            "text": "貅"
+          },
+          {
+            "confidence": 0.974,
+            "det_confidence": 0.9285,
+            "position": [
+              170,
+              1833,
+              300,
+              1940
+            ],
+            "text": "軀"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9281,
+            "position": [
+              175,
+              1940,
+              300,
+              2054
+            ],
+            "text": "虎"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9216,
+            "position": [
+              181,
+              2054,
+              293,
+              2136
+            ],
+            "text": "以"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9297,
+            "position": [
+              177,
+              2136,
+              304,
+              2256
+            ],
+            "text": "與"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.92,
+            "position": [
+              185,
+              2254,
+              304,
+              2369
+            ],
+            "text": "炎"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9205,
+            "position": [
+              181,
+              2369,
+              300,
+              2486
+            ],
+            "text": "帝"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9283,
+            "position": [
+              179,
+              2488,
+              302,
+              2607
+            ],
+            "text": "戰"
+          },
+          {
+            "confidence": 0.994,
+            "det_confidence": 0.9292,
+            "position": [
+              175,
+              2607,
+              298,
+              2709
+            ],
+            "text": "於"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9261,
+            "position": [
+              187,
+              2715,
+              310,
+              2819
+            ],
+            "text": "阪"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9279,
+            "position": [
+              183,
+              2819,
+              312,
+              2953
+            ],
+            "text": "泉"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            164,
+            800
+          ],
+          [
+            164,
+            377
+          ],
+          [
+            289,
+            379
+          ],
+          [
+            289,
+            800
+          ]
+        ],
+        "text": "民度四方",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9208,
+            "position": [
+              177,
+              379,
+              283,
+              491
+            ],
+            "text": "民"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9235,
+            "position": [
+              166,
+              489,
+              291,
+              610
+            ],
+            "text": "度"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9101,
+            "position": [
+              175,
+              614,
+              283,
+              696
+            ],
+            "text": "四"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9151,
+            "position": [
+              173,
+              700,
+              287,
+              802
+            ],
+            "text": "方"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            75,
+            606
+          ],
+          [
+            152,
+            604
+          ],
+          [
+            166,
+            1252
+          ],
+          [
+            87,
+            1254
+          ]
+        ],
+        "text": "服虔曰阪泉地名",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8994,
+            "position": [
+              81,
+              606,
+              154,
+              689
+            ],
+            "text": "服"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.9113,
+            "position": [
+              79,
+              691,
+              154,
+              789
+            ],
+            "text": "虔"
+          },
+          {
+            "confidence": 0.974,
+            "det_confidence": 0.8641,
+            "position": [
+              91,
+              806,
+              152,
+              877
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 0.984,
+            "det_confidence": 0.8986,
+            "position": [
+              87,
+              887,
+              160,
+              971
+            ],
+            "text": "阪"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9014,
+            "position": [
+              87,
+              975,
+              160,
+              1071
+            ],
+            "text": "泉"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9022,
+            "position": [
+              87,
+              1075,
+              162,
+              1156
+            ],
+            "text": "地"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8928,
+            "position": [
+              91,
+              1160,
+              148,
+              1254
+            ],
+            "text": "名"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            22,
+            587
+          ],
+          [
+            22,
+            377
+          ],
+          [
+            143,
+            377
+          ],
+          [
+            143,
+            587
+          ]
+        ],
+        "text": "之野",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9147,
+            "position": [
+              25,
+              379,
+              145,
+              470
+            ],
+            "text": "之"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9235,
+            "position": [
+              22,
+              475,
+              145,
+              589
+            ],
+            "text": "野"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            16,
+            1254
+          ],
+          [
+            16,
+            600
+          ],
+          [
+            89,
+            602
+          ],
+          [
+            89,
+            1254
+          ]
+        ],
+        "text": "皇南謐曰在上谷",
+        "words": [
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8896,
+            "position": [
+              18,
+              602,
+              75,
+              693
+            ],
+            "text": "皇"
+          },
+          {
+            "confidence": 0.592,
+            "det_confidence": 0.896,
+            "position": [
+              16,
+              693,
+              77,
+              791
+            ],
+            "text": "南"
+          },
+          {
+            "confidence": 0.82,
+            "det_confidence": 0.8915,
+            "position": [
+              18,
+              798,
+              91,
+              889
+            ],
+            "text": "謐"
+          },
+          {
+            "confidence": 0.961,
+            "det_confidence": 0.873,
+            "position": [
+              20,
+              896,
+              83,
+              971
+            ],
+            "text": "曰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8935,
+            "position": [
+              18,
+              977,
+              87,
+              1075
+            ],
+            "text": "在"
+          },
+          {
+            "confidence": 0.976,
+            "det_confidence": 0.8905,
+            "position": [
+              25,
+              1079,
+              87,
+              1154
+            ],
+            "text": "上"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.8906,
+            "position": [
+              22,
+              1162,
+              89,
+              1256
+            ],
+            "text": "谷"
+          }
+        ]
+      },
+      {
+        "position": [
+          [
+            12,
+            1269
+          ],
+          [
+            148,
+            1267
+          ],
+          [
+            166,
+            2963
+          ],
+          [
+            33,
+            2965
+          ]
+        ],
+        "text": "三戰然後得其志蚩尤作亂不用帝命",
+        "words": [
+          {
+            "confidence": 0.998,
+            "det_confidence": 0.9086,
+            "position": [
+              29,
+              1269,
+              145,
+              1356
+            ],
+            "text": "三"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9319,
+            "position": [
+              31,
+              1358,
+              150,
+              1485
+            ],
+            "text": "戰"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9242,
+            "position": [
+              31,
+              1487,
+              145,
+              1596
+            ],
+            "text": "然"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9313,
+            "position": [
+              22,
+              1600,
+              152,
+              1719
+            ],
+            "text": "後"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9382,
+            "position": [
+              20,
+              1719,
+              150,
+              1842
+            ],
+            "text": "得"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9277,
+            "position": [
+              31,
+              1844,
+              150,
+              1958
+            ],
+            "text": "其"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9272,
+            "position": [
+              35,
+              1956,
+              154,
+              2052
+            ],
+            "text": "志"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9248,
+            "position": [
+              39,
+              2056,
+              139,
+              2169
+            ],
+            "text": "蚩"
+          },
+          {
+            "confidence": 0.999,
+            "det_confidence": 0.919,
+            "position": [
+              37,
+              2169,
+              152,
+              2265
+            ],
+            "text": "尤"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9278,
+            "position": [
+              29,
+              2269,
+              150,
+              2377
+            ],
+            "text": "作"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9349,
+            "position": [
+              37,
+              2379,
+              158,
+              2504
+            ],
+            "text": "亂"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9148,
+            "position": [
+              35,
+              2507,
+              150,
+              2600
+            ],
+            "text": "不"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.927,
+            "position": [
+              41,
+              2600,
+              141,
+              2713
+            ],
+            "text": "用"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9291,
+            "position": [
+              39,
+              2715,
+              154,
+              2836
+            ],
+            "text": "帝"
+          },
+          {
+            "confidence": 1.0,
+            "det_confidence": 0.9229,
+            "position": [
+              35,
+              2838,
+              166,
+              2965
+            ],
+            "text": "命"
+          }
+        ]
+      }
+    ],
+    "texts": [
+      "五帝本紀第一",
+      "史記一",
+      "凢是徐氏義稱徐姓名以别之",
+      "餘者悉是駟注解并集衆家義",
+      "黄帝者",
+      "徐廣曰",
+      "少與之子姓公孫",
+      "譙周曰有能國君少典之子也",
+      "號有熊",
+      "皇甫謐曰有能今河南新跏具",
+      "徐廣日墨子日年",
+      "也名曰軒轅生而神靈弱而能言幼而徇齊",
+      "踰十五則璁明心",
+      "黨無不徇通矣駰案徇疾齊",
+      "速也言聖德幼而疾速也",
+      "長而敦敏成而聦明軒轅之時神",
+      "農氏世衰",
+      "皇甫謐曰易稱庖犧氏没神農氏作是",
+      "爲炎谛班固曰敎民耕農故號曰神農",
+      "諸侯相侵伐暴",
+      "虐百姓而神農氏弗能征於是軒轅乃習用干戈目征不享",
+      "諸侯咸來賔從而蚩尤最爲暴莫能伐",
+      "應劭曰蚩尤古天子瓚",
+      "三孔子三朝許曰蚩优",
+      "庶人之",
+      "貪者",
+      "炎帝欲侵陵諸侯諸侯咸歸軒轅軒轅乃修德振兵",
+      "治五氣",
+      "王肅曰五",
+      "蓺樹也詩云蓺之荏菽周禮曰穀冝",
+      "行之氣",
+      "撫萬",
+      "蓺五種",
+      "五種尊玄曰五種黍稷菽麥稻也",
+      "王肅曰度四",
+      "方而安撫之",
+      "敎熊羆貔貅軀虎以與炎帝戰於阪泉",
+      "民度四方",
+      "服虔曰阪泉地名",
+      "之野",
+      "皇南謐曰在上谷",
+      "三戰然後得其志蚩尤作亂不用帝命"
+    ],
+    "width": 1920
+  },
+  "id": "814c81e6-5c97-4b4f-ada3-1c563851408c",
+  "info": "",
+  "message": "success"
+}
