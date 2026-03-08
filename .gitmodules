@@ -1,6 +1,0 @@
-[submodule "thirdparty/txtai"]
-	path = thirdparty/txtai
-	url = https://github.com/neuml/txtai.git
-[submodule "thirdparty/Chinese-CLIP"]
-	path = thirdparty/Chinese-CLIP
-	url = https://github.com/OFA-Sys/Chinese-CLIP.git
