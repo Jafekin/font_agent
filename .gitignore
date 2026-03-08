@@ -136,6 +136,7 @@ dmypy.json
 /data/名录 史记2025-11-6
 /model/*
 /data/*
+/outputs/*
 
 # OS
 .DS_Store
