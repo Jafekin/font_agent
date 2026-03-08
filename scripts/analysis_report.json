@@ -1,0 +1,241 @@
+{
+  "summary": {
+    "total_images": 329,
+    "confidence": {
+      "count": 329,
+      "mean": 0.9373440306280557,
+      "median": 0.9741683848797251,
+      "stdev": 0.13007282105630194,
+      "min": 0.0,
+      "max": 0.9998727272727274,
+      "high_quality": 251,
+      "medium_quality": 53,
+      "low_quality": 25
+    },
+    "orientation": {
+      "vertical": 304,
+      "horizontal": 25,
+      "total": 329,
+      "vertical_ratio": 0.9240121580547113
+    }
+  },
+  "by_version": {
+    "B": {
+      "count": 39,
+      "total_lines": 1005,
+      "vertical_count": 33,
+      "avg_confidence": 0.8993312049089605,
+      "avg_lines": 25.76923076923077
+    },
+    "C": {
+      "count": 265,
+      "total_lines": 4770,
+      "vertical_count": 247,
+      "avg_confidence": 0.9414610993356228,
+      "avg_lines": 18.0
+    },
+    "E": {
+      "count": 5,
+      "total_lines": 108,
+      "vertical_count": 5,
+      "avg_confidence": 0.9427923082010038,
+      "avg_lines": 21.6
+    },
+    "A": {
+      "count": 17,
+      "total_lines": 392,
+      "vertical_count": 17,
+      "avg_confidence": 0.960462873403731,
+      "avg_lines": 23.058823529411764
+    },
+    "D": {
+      "count": 3,
+      "total_lines": 45,
+      "vertical_count": 2,
+      "avg_confidence": 0.9277491241241241,
+      "avg_lines": 15.0
+    }
+  },
+  "by_library": {
+    "null": {
+      "count": 104,
+      "total_lines": 2099,
+      "avg_lines": 20.182692307692307
+    },
+    "南京图书馆": {
+      "count": 27,
+      "total_lines": 408,
+      "avg_lines": 15.11111111111111
+    },
+    "湖南图书馆": {
+      "count": 23,
+      "total_lines": 462,
+      "avg_lines": 20.08695652173913
+    },
+    "山东省图书馆": {
+      "count": 16,
+      "total_lines": 313,
+      "avg_lines": 19.5625
+    },
+    "皖西学院图书馆": {
+      "count": 11,
+      "total_lines": 215,
+      "avg_lines": 19.545454545454547
+    },
+    "黑龙江省图书馆": {
+      "count": 11,
+      "total_lines": 152,
+      "avg_lines": 13.818181818181818
+    },
+    "国家图书馆": {
+      "count": 11,
+      "total_lines": 336,
+      "avg_lines": 30.545454545454547
+    },
+    "内蒙古大学图书馆": {
+      "count": 9,
+      "total_lines": 100,
+      "avg_lines": 11.11111111111111
+    },
+    "重庆图书馆": {
+      "count": 8,
+      "total_lines": 272,
+      "avg_lines": 34.0
+    },
+    "复旦大学图书馆": {
+      "count": 8,
+      "total_lines": 105,
+      "avg_lines": 13.125
+    },
+    "江西省图书馆": {
+      "count": 7,
+      "total_lines": 97,
+      "avg_lines": 13.857142857142858
+    },
+    "中共福建省委党校图书馆": {
+      "count": 7,
+      "total_lines": 117,
+      "avg_lines": 16.714285714285715
+    },
+    "陕西省图书馆": {
+      "count": 7,
+      "total_lines": 160,
+      "avg_lines": 22.857142857142858
+    },
+    "湖北省图书馆": {
+      "count": 7,
+      "total_lines": 131,
+      "avg_lines": 18.714285714285715
+    },
+    "吉林市图书馆": {
+      "count": 6,
+      "total_lines": 99,
+      "avg_lines": 16.5
+    },
+    "北京大学图书馆": {
+      "count": 6,
+      "total_lines": 162,
+      "avg_lines": 27.0
+    },
+    "吉林大学图书馆": {
+      "count": 6,
+      "total_lines": 101,
+      "avg_lines": 16.833333333333332
+    },
+    "湖南师范大学图书馆": {
+      "count": 5,
+      "total_lines": 108,
+      "avg_lines": 21.6
+    },
+    "石家庄市图书馆": {
+      "count": 5,
+      "total_lines": 83,
+      "avg_lines": 16.6
+    },
+    "吉林省图书馆": {
+      "count": 5,
+      "total_lines": 64,
+      "avg_lines": 12.8
+    },
+    "新疆大学图书馆": {
+      "count": 5,
+      "total_lines": 57,
+      "avg_lines": 11.4
+    },
+    "内蒙古社会科学院图书馆": {
+      "count": 5,
+      "total_lines": 73,
+      "avg_lines": 14.6
+    },
+    "四川大学图书馆": {
+      "count": 4,
+      "total_lines": 54,
+      "avg_lines": 13.5
+    },
+    "上海图书馆": {
+      "count": 3,
+      "total_lines": 77,
+      "avg_lines": 25.666666666666668
+    },
+    "北京师范大学图书馆": {
+      "count": 3,
+      "total_lines": 32,
+      "avg_lines": 10.666666666666666
+    },
+    "上海师范大学图书馆": {
+      "count": 3,
+      "total_lines": 32,
+      "avg_lines": 10.666666666666666
+    },
+    "甘肃省图书馆": {
+      "count": 3,
+      "total_lines": 107,
+      "avg_lines": 35.666666666666664
+    },
+    "安徽师范大学图书馆": {
+      "count": 3,
+      "total_lines": 50,
+      "avg_lines": 16.666666666666668
+    },
+    "华南师范大学图书馆": {
+      "count": 2,
+      "total_lines": 31,
+      "avg_lines": 15.5
+    },
+    "扬州市图书馆": {
+      "count": 2,
+      "total_lines": 72,
+      "avg_lines": 36.0
+    },
+    "河南省图书馆": {
+      "count": 2,
+      "total_lines": 36,
+      "avg_lines": 18.0
+    },
+    "天津图书馆": {
+      "count": 1,
+      "total_lines": 17,
+      "avg_lines": 17.0
+    },
+    "辽宁省图书馆": {
+      "count": 1,
+      "total_lines": 19,
+      "avg_lines": 19.0
+    },
+    "襄樊市少年儿童图书馆": {
+      "count": 1,
+      "total_lines": 29,
+      "avg_lines": 29.0
+    },
+    "江苏省如皋市图书馆": {
+      "count": 1,
+      "total_lines": 25,
+      "avg_lines": 25.0
+    },
+    "四川省图书馆": {
+      "count": 1,
+      "total_lines": 25,
+      "avg_lines": 25.0
+    }
+  }
+}
