@@ -246,12 +246,61 @@ Optional:
 - All file paths should use `pathlib.Path` for cross-platform compatibility.
 - Database queries use Django ORM; avoid raw SQL.
 
+## GraphRAG Module (Enhanced)
+
+The project now includes an enhanced GraphRAG module that builds knowledge graphs from the `outputs/` directory:
+
+### Building Knowledge Graph from outputs/
+
+```bash
+# View dataset statistics
+python scripts/build_graph_from_outputs.py --outputs-dir outputs --stats-only
+
+# Build basic graph (no entity extraction)
+python scripts/build_graph_from_outputs.py --outputs-dir outputs
+
+# Build full graph with entity extraction
+python scripts/build_graph_from_outputs.py --outputs-dir outputs --extract-entities
+
+# Add similarity relations from embeddings
+python scripts/build_graph_from_outputs.py \
+  --outputs-dir outputs \
+  --extract-entities \
+  --build-similarity \
+  --embeddings-path rag/index/embeddings.npy \
+  --ids-path rag/index/ids.json \
+  --similarity-threshold 0.85
+```
+
+### Key Components
+
+- **OutputsDataLoader** (`rag/graph/data_loader.py`): Loads OCR results and metadata from `outputs/` directory structure
+- **EnhancedGraphBuilder** (`rag/graph/enhanced_builder.py`): Builds Neo4j graph from outputs data with entity extraction
+- **GraphBuilder** (`rag/graph/builder.py`): Original builder for `rag/index/metadata.json` format
+- **Neo4jClient** (`rag/graph/neo4j_client.py`): Neo4j database client with CRUD operations
+- **GraphQueryInterface** (`rag/graph/query_interface.py`): Query interface for graph traversal and inference
+
+### outputs/ Directory Structure
+
+Each page in `outputs/` contains:
+- `{name}.json`: Structured OCR results with text lines and word positions
+- `metadata.json`: Statistics (line count, confidence, image size)
+- `extended_metadata.json`: Parsed version, edition, collection info (optional)
+- `raw/{name}_raw.json`: Raw API response
+- `text/{name}.txt`: Plain text output
+- `overlay/{name}_overlay.jpg`: Annotated image
+
+### Graph Schema
+
+- **Nodes**: Document, Volume, Page, Edition, Collection, Layout, Seal, Entity
+- **Relationships**: HAS_VOLUME, HAS_PAGE, SIMILAR_TO, BELONGS_TO_EDITION, STORED_IN, HAS_LAYOUT, HAS_SEAL, MENTIONS
+
+See `rag/graph/USAGE.md` for detailed usage examples and `rag/graph/SCHEMA.md` for complete schema documentation.
+
 ## Future Work (Agentic GraphRAG)
 
-The project is transitioning from Naive RAG to Agentic GraphRAG:
-1. **Graph Construction**: Convert metadata to Neo4j nodes/edges (Document, Version, Collection, Seal entities).
-2. **Hybrid Retrieval**: Combine vector search with graph traversal and attribute filtering.
-3. **Agent Orchestration**: Multi-step reasoning with tool calls (OCR, graph query, vector search).
-4. **Citation Validation**: Use graph IDs to verify LLM-generated citations.
-
-See `rag/graph/` for in-progress implementation.
+Next steps for full Agentic GraphRAG:
+1. **Hybrid Retrieval**: Combine vector search with graph traversal and attribute filtering
+2. **Agent Orchestration**: Multi-step reasoning with tool calls (OCR, graph query, vector search)
+3. **Citation Validation**: Use graph IDs to verify LLM-generated citations
+4. **Query Planning**: Natural language to Cypher query translation
