@@ -1,0 +1,31 @@
+# 评估结果
+evaluation_results/
+*.json
+*.txt
+
+# 可视化输出
+plots/
+*.png
+*.jpg
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 临时文件
+*.log
+*.tmp

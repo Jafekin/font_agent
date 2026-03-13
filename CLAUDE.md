@@ -272,6 +272,36 @@ python scripts/build_graph_from_outputs.py \
   --similarity-threshold 0.85
 ```
 
+### Evaluating GraphRAG Performance
+
+The project includes a comprehensive evaluation system for testing GraphRAG performance:
+
+```bash
+# Quick evaluation demo (no test data needed)
+python eval/scripts/quick_evaluation_demo.py
+
+# Generate test data from existing graph
+python eval/scripts/generate_graphrag_test_data.py \
+  --output tests/graphrag_test_data.json \
+  --num-retrieval 20 \
+  --num-edition 10
+
+# Run full evaluation
+python eval/scripts/evaluate_graphrag.py \
+  --test-data tests/graphrag_test_data.json \
+  --output-dir evaluation_results
+
+# Visualize results
+python eval/scripts/visualize_evaluation_results.py \
+  --metrics-file evaluation_results/evaluation_metrics_*.json \
+  --output-dir evaluation_results/plots
+```
+
+**Evaluation Metrics**:
+- Retrieval quality: Precision@K, Recall@K, F1@K, MRR, NDCG@K, Hit Rate@K
+- GraphRAG specific: Edition inference accuracy, entity relation accuracy, multi-hop reasoning
+- See `eval/README.md` for detailed documentation
+
 ### Key Components
 
 - **OutputsDataLoader** (`rag/graph/data_loader.py`): Loads OCR results and metadata from `outputs/` directory structure

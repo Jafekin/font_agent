@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """批量导入脚本 - 从 outputs/ 目录构建知识图谱."""
 
+from rag.graph.data_loader import OutputsDataLoader
+from rag.graph.enhanced_builder import EnhancedGraphBuilder
+from rag.graph.neo4j_client import Neo4jClient
 import argparse
 import logging
 import sys
 from pathlib import Path
 
 # 添加项目根目录到路径
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from rag.graph.neo4j_client import Neo4jClient
-from rag.graph.enhanced_builder import EnhancedGraphBuilder
-from rag.graph.data_loader import OutputsDataLoader
 
 logging.basicConfig(
     level=logging.INFO,

@@ -15,6 +15,7 @@ from .builder import GraphBuilder
 from .enhanced_builder import EnhancedGraphBuilder
 from .data_loader import OutputsDataLoader
 from .query_interface import GraphQueryInterface
+from .retriever import GraphRetriever, GraphSearchResult
 from .explainer import EvidenceExplainer
 
 __version__ = "1.0.0"
@@ -28,6 +29,8 @@ __all__ = [
     "OutputsDataLoader",
     # 查询接口
     "GraphQueryInterface",
+    "GraphRetriever",
+    "GraphSearchResult",
     "EvidenceExplainer",
     # 数据模型
     "Document",
