@@ -15,7 +15,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from rag.embeddings import MODEL_NAME, get_image_embedding, get_text_embedding  # noqa: E402
+from rag.naive.embeddings import MODEL_NAME, get_image_embedding, get_text_embedding  # noqa: E402
 
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tiff")
 DEFAULT_INDEX_PATH = PROJECT_ROOT / "rag" / "index"
