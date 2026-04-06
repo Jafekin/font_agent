@@ -141,6 +141,8 @@ graph LR
 ```bash
 # 克隆项目
 git clone --recursive https://github.com/Jafekin/font.git && cd font
+git submodule update --init
+uv pip install -e . --no-build-isolation
 
 # 创建环境并同步依赖
 uv sync

@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 import numpy as np
 
-from rag.embeddings import get_image_embedding, get_text_embedding, MODEL_NAME
+from rag.naive.embeddings import get_image_embedding, get_text_embedding, MODEL_NAME
 
 # 配置日志
 logger = logging.getLogger(__name__)

@@ -1,7 +1,7 @@
 '''
 Author        Jiahui Chen 1946847867@qq.com
 Date          2025-11-05 23:35:42
-LastEditTime  2025-11-24 16:22:07
+LastEditTime  2026-04-06 15:48:43
 Description   This module defines the prompt for the generator model. Updated with comprehensive ancient text metadata fields and enhanced JSON structure using txtai RAG.
 
 '''
@@ -32,6 +32,14 @@ PROMPT_TEXT = """系统角色：你是一位精通古文字学、版本学与修
 13. **藏书信息限制**：除非上传书影本身表现为收藏题跋/批校页，或 `user_hint` / `retrieved_context` 明确提供收藏单位、批校题跋信息，否则全篇不得主动生成任何收藏单位、藏家、题跋、批校相关内容；必须在对应字段内写“暂未识别（置信度 0.0）”并说明原因。
 
 Markdown 输出骨架（字段前缀不可省略；若描述较长可换行，但需保持先列字段名）：
+
+## 输入概览
+- script_type：按照真实值或“未提供”。
+- user_hint：按照真实值或“未提供”。
+- retrieved_context：
+  - 逐条列出 `retrieved_context` 项，若无内容写“retrieved_context: 未提供”。
+  
+---
 
 ## 文献类型
 - 文献类型：从指定枚举中选择，并说明判定理由与置信度。

@@ -137,6 +137,7 @@ dmypy.json
 /model/*
 /data/*
 /outputs/*
+/rag/naive/data/*
 
 # OS
 .DS_Store

@@ -1,0 +1,4 @@
+
+[submodule "thirdparty/Chinese-CLIP"]
+	path = thirdparty/Chinese-CLIP
+	url = https://github.com/OFA-Sys/Chinese-CLIP.git

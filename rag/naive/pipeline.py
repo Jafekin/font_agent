@@ -6,9 +6,9 @@ import os
 import logging
 import traceback
 
-from rag.embeddings import get_image_embedding, get_text_embedding
-from rag.retriever import TxtaiRetriever
-from rag.prompt import get_prompt
+from rag.naive.embeddings import get_image_embedding, get_text_embedding
+from rag.naive.retriever import TxtaiRetriever
+from rag.naive.prompt import get_prompt
 from PIL import Image
 
 try:

@@ -16,7 +16,7 @@ from django.views.decorators.http import require_http_methods
 from PIL import Image
 
 from .models import ScriptAnalysis
-from rag.pipeline import RAGPipeline, analyze_with_llm
+from rag.naive.pipeline import RAGPipeline, analyze_with_llm
 
 logger = logging.getLogger(__name__)
 
