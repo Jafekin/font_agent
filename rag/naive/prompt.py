@@ -148,6 +148,88 @@ Markdown 输出骨架（字段前缀不可省略；若描述较长可换行，�
 请确保所有章节均有内容，如信息缺失需说明“暂未识别（置信度 0.0）”并保持字段顺序不变。"""
 
 
+def _format_single_context(ctx: object) -> str:
+    """将单条检索结果格式化为可读字符串。
+
+    支持两种输入：
+    - dict（retriever 返回的结果，含 metadata 字段）
+    - str（旧版纯文本）
+    """
+    if isinstance(ctx, str):
+        return ctx
+
+    if not isinstance(ctx, dict):
+        return str(ctx)
+
+    meta: dict = ctx.get("metadata", {}) or {}
+    score: float = ctx.get("score", 0.0)
+    doc_id: str = ctx.get("id", "")
+
+    parts: list[str] = []
+
+    # 标识
+    if doc_id:
+        parts.append(f"页面ID: {doc_id}")
+
+    # 核心版本信息
+    version_type = meta.get("version_type", "")
+    annotation = meta.get("annotation_system", "")
+    dynasty = meta.get("dynasty_period", "")
+    printer = meta.get("printer", "")
+
+    edition_parts: list[str] = []
+    if version_type:
+        edition_parts.append(f"版本{version_type}")
+    if annotation:
+        edition_parts.append(annotation)
+    if dynasty:
+        edition_parts.append(f"{dynasty}刻本")
+    if printer:
+        edition_parts.append(f"（{printer}）")
+    if edition_parts:
+        parts.append("版本信息: " + "·".join(edition_parts))
+
+    # 著者与注释者
+    authors = meta.get("authors", "")
+    annotators = meta.get("annotators", "")
+    if authors:
+        parts.append(f"著者: {authors}")
+    if annotators:
+        parts.append(f"注释者: {annotators}")
+
+    # 卷数与配本
+    total_juan = meta.get("total_juan", "")
+    extant_juan = meta.get("extant_juan", "")
+    if total_juan:
+        parts.append(f"全书{total_juan}卷")
+    if extant_juan:
+        parts.append(f"现存: {extant_juan}")
+
+    peiben = meta.get("peiben_notes", "")
+    if peiben:
+        parts.append(f"配本说明: {peiben}")
+
+    # 收藏机构与编目号
+    institution = meta.get("holding_institution", "")
+    catalog_main = meta.get("catalog_id_main", "")
+    catalog_secondary = meta.get("catalog_id_secondary", "")
+    if institution:
+        parts.append(f"收藏: {institution}")
+    if catalog_main:
+        cat = f"{catalog_secondary}{catalog_main}" if catalog_secondary else catalog_main
+        parts.append(f"编目: {cat}")
+
+    # OCR 文字节选（来自 text_info 或 content）
+    text_info: str = ctx.get("text_info", "") or meta.get("text_info", "")
+    if text_info:
+        preview = text_info[:200].replace("\n", " ")
+        parts.append(f"内容节选: {preview}")
+
+    parts.append(f"相似度: {score:.3f}")
+
+    return "；".join(parts)
+
+
 def get_prompt(script_type: str, hint: str, retrieved_context: list) -> str:
     """
     Formats the prompt with script_type, hint, and retrieved_context.
@@ -156,12 +238,14 @@ def get_prompt(script_type: str, hint: str, retrieved_context: list) -> str:
         script_type: Type of ancient script
         hint: User-provided hint or context
         retrieved_context: List of retrieved reference materials from txtai RAG pipeline
+                           Each item may be a dict (retriever result) or a plain string.
 
     Returns:
         str: Formatted prompt ready for model inference
     """
     if retrieved_context:
-        context_str = "\n".join(f"- {ctx}" for ctx in retrieved_context)
+        lines = [f"- {_format_single_context(ctx)}" for ctx in retrieved_context]
+        context_str = "\n".join(lines)
     else:
         context_str = "- 未提供"
     return PROMPT_TEXT.format(
