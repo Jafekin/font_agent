@@ -1,189 +1,91 @@
-# RAG 使用示例
+# NaiveRAG 模块
 
-## 快速开始
+基于 Chinese-CLIP 的图像+文本向量检索管道，为 LLM 提供结构化古籍上下文。
 
-### 0. 环境准备
-
-1. 安装第三方 Chinese-CLIP 依赖：
-    ```bash
-    pip install -e thirdparty/Chinese-CLIP
-    ```
-2. （可选）设置 `HUGGINGFACE_HUB_TOKEN` 以提升模型下载速度。
-3. 确认 `scripts/build_index.py` 和 `rag/embeddings.py` 使用相同的模型名，默认是 `OFA-Sys/chinese-clip-vit-base-patch16`（脚本会自动映射到 `ViT-B-16` 权重）。
-
-### 1. 准备原始数据
-
-为每张图片放置一个同名的文字描述文件（JSON / TXT / MD），目录结构示例：
+## 架构
 
 ```
-media/uploads/
-├── image1.jpg
-├── image1.json          # JSON 描述
-├── image2.png
-└── image2.txt           # 纯文本描述
+rag/data/{页面目录}/          ← 数据源（每页一个目录）
+        ├── {name}.json       # OCR text_lines
+        ├── metadata.json     # OCR 统计 + 图片路径
+        ├── extended_metadata.json  # 版本/机构元数据
+        ├── text/{name}.txt   # 清洗后纯文本
+        └── overlay/{name}_overlay.jpg
+
+data_loader.py  → NaiveDataLoader  → PageData（统一 schema）
+scripts/build_index.py  → embeddings.npy + ids.json + metadata.json
+retriever.py  → TxtaiRetriever（cosine 相似度搜索）
+pipeline.py  → RAGPipeline（检索 → 提示 → LLM）
+prompt.py  → get_prompt()（结构化 Markdown 报告模板）
 ```
 
-`image1.json` 示例：
+## 快速上手
 
-```json
-{
-   "title": "史记一百三十卷",
-   "author": "（汉）司马迁",
-   "edition": "北宋刻本",
-   "description": "这是一张史记古籍图片......"
-}
-```
-
-`image2.txt` 示例：
-
-```
-这是一张甲骨文图片，记录了商代晚期的卜辞内容。
-主要内容包括：祭祀、田猎、征伐等。
-```
-
-### 2. 构建本地向量索引
-
-运行脚本即可自动：扫描图片 → 提取/兜底文字 → 使用 Chinese-CLIP 生成图文向量 → 保存为 numpy 索引：
+### 1. 构建向量索引
 
 ```bash
-python scripts/build_index.py \
-      --image-dir media/uploads \
-      --index-path rag/index \
-      --image-weight 0.65
+python rag/naive/scripts/build_index.py \
+  --data-dir rag/data \
+  --index-path rag/naive/index \
+  --image-weight 0.65 \
+  --use-overlay
 ```
 
-输出目录包含：
-
+生成文件：
 ```
-rag/index/
-├── embeddings.npy   # N×D 浮点矩阵
-├── ids.json         # 每行对应的文档 ID
-├── metadata.json    # 展平后的元数据 + text_info
-└── config.json      # 模型名、向量维度、统计信息
+rag/naive/index/
+├── embeddings.npy   # N×512 float32 向量矩阵
+├── ids.json         # 页面 ID 列表
+├── metadata.json    # 每页元数据 + text_info
+└── config.json      # 模型名、维度、统计
 ```
 
-若构建过程中提示模型未找到，请确认已经安装 `huggingface_hub`，必要时设置代理或提前拉取权重。
-
-### 2. 使用RAG管道分析图片
+### 2. 调用 RAG 管道
 
 ```python
-from rag.pipeline import RAGPipeline
+from rag.naive.pipeline import RAGPipeline
 
-# 初始化管道
-pipeline = RAGPipeline(index_path="rag/index")
-
-# 用户上传图片后，进行分析
+pipeline = RAGPipeline(index_path="rag/naive/index")
 result = pipeline.run(
-    image_path="/Users/jafekin/Desktop/古籍/名录 史记2025-11-6/C史记 集解、索隐、正义三家注本 4明嘉靖四年（1525）汪谅刻本/【2】03476 （二）03215 史记一百三十卷 （汉）司马迁撰 （南朝宋）裴骃集解 （唐）司马贞索隐 （唐）张守节正义 明嘉靖四年（1525）汪谅刻本 山东省图书馆/IMG_4549.jpg",
+    image_path="path/to/query.jpg",
     script_type="汉文古籍",
-    hint="用户提供的提示信息（可选）",
-    k=5  # 检索top-5个相似图片
+    hint="宋刻本",   # 可选
+    k=3,
 )
 
-# 检查结果
-if result['success']:
-    # LLM的分析结果
-    analysis = result['analysis']
-    print("分析结果:", analysis)
-    
-    # 检索到的文字信息（这些信息会被输入给LLM）
-    text_info = result['retrieved_text_info']
-    print("\n检索到的文字信息:")
-    for i, info in enumerate(text_info, 1):
-        print(f"{i}. {info[:100]}...")  # 显示前100个字符
-    
-    # 参考来源
-    references = result['retrieved_references']
-    print(f"\n参考来源: {references}")
-    
-    # 相似度分数
-    scores = result['retrieval_scores']
-    print(f"相似度分数: {scores}")
-else:
-    print(f"错误: {result['error']}")
+print(result["analysis"])        # LLM 结构化报告
+print(result["retrieved_references"])  # 检索到的页面 ID
+print(result["retrieval_scores"])      # 相似度分数
 ```
 
-### 3. 仅检索相似图片（不调用LLM）
+### 3. 仅检索（不调用 LLM）
 
 ```python
-from rag.pipeline import RAGPipeline
-
-pipeline = RAGPipeline(index_path="rag/index")
-
-# 搜索相似图片
-similar_images = pipeline.search_similar(
-    query_image_path="/Users/jafekin/Desktop/古籍/名录 史记2025-11-6/C史记 集解、索隐、正义三家注本 4明嘉靖四年（1525）汪谅刻本/【2】03476 （二）03215 史记一百三十卷 （汉）司马迁撰 （南朝宋）裴骃集解 （唐）司马贞索隐 （唐）张守节正义 明嘉靖四年（1525）汪谅刻本 山东省图书馆/IMG_4549.jpg",
-    k=5
-)
-
-for item in similar_images:
-    print(f"图片ID: {item['id']}")
-    print(f"图片路径: {item['image_path']}")
-    print(f"文字信息: {item['text_info']}")
-    print(f"相似度: {item['score']:.3f}")
-    print("---")
+results = pipeline.search_similar(query_image_path="query.jpg", k=5)
+for r in results:
+    print(r["id"], r["score"], r["text_info"][:80])
 ```
 
-### 4. 获取图片对应的文字信息
+## 数据 Schema（PageData）
 
-```python
-from rag.pipeline import RAGPipeline
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `page_id` | str | 目录名（唯一 ID） |
+| `full_text` | str | 清洗后 OCR 纯文本 |
+| `edition.version_type` | str | 版本类型（A/B/C/D/E） |
+| `edition.annotation_system` | str | 集解 / 三家注 等 |
+| `edition.printing_info.dynasty_period` | str | 朝代/时期 |
+| `edition.printing_info.printer` | str | 刻印者或书坊 |
+| `edition.holding_institution` | str | 收藏机构 |
+| `edition.authors` | list[str] | 著者 |
+| `edition.annotators` | list[str] | 注释者 |
+| `edition.total_juan` | int | 全书总卷数 |
 
-pipeline = RAGPipeline(index_path="rag/index")
+## 关键参数
 
-# 直接获取图片对应的文字信息
-text_info_list = pipeline.get_text_info_for_image("image.jpg", k=1)
-
-if text_info_list:
-    print(f"文字信息: {text_info_list[0]}")
-else:
-    print("未找到对应的文字信息")
-```
-
-## 工作流程说明 
-
-1. **构建知识库**：
-   - 将图片和对应的文字信息组织好
-   - 运行`build_index.py`构建索引
-   - 索引会保存图片的向量表示和对应的文字信息
-
-2. **用户上传图片**：
-   - 用户通过前端上传图片
-
-3. **检索相似图片**：
-   - 管道直接加载 `embeddings.npy + ids.json` 完成向量检索
-   - 返回相似图片及其对应的文字信息
-
-4. **构建增强提示词**：
-   - 将检索到的文字信息作为上下文
-   - 与用户提示一起构建增强的提示词
-
-5. **LLM分析**：
-   - 将增强提示与用户图片传入 LLM
-   - 基于检索上下文得到最终回答
-
-6. **返回结果**：
-   - 返回LLM的分析结果
-   - 同时返回检索到的文字信息和参考来源
-
-## 注意事项
-
-1. **文字信息文件命名**：
-   - 图片文件：`image.jpg`
-   - 对应的文字信息文件：`image.json` 或 `image.txt`
-   - 文件名（不含扩展名）必须相同
-
-2. **文字信息格式**：
-   - JSON格式：脚本会自动提取`description`、`text`、`content`等字段
-   - 文本格式：直接读取文件内容
-   - 如果找不到文字信息文件，会使用图片文件名作为默认信息
-
-3. **索引更新**：
-   - 添加新图片后，需要重新运行`build_index.py`更新索引
-   - 或者实现增量索引功能（未来扩展）
-
-4. **性能优化**：
-   - 设置 `RAG_DEVICE=cuda` 以启用 GPU 编码
-   - `RAG_FAKE_EMBEDDINGS=1` 可用于无 GPU 环境的快速冒烟测试
-   - 减少图片尺寸或分批构建以控制显存与内存占用
-
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| `--image-weight` | 0.65 | 图像向量权重（0→纯文本，1→纯图像） |
+| `--use-overlay` | True | 优先用含 OCR 框的 overlay 图片 |
+| `k` | 3 | 检索返回的相似页面数 |
+| `RAG_FAKE_EMBEDDINGS=1` | — | 跳过模型加载，返回假结果（测试用） |

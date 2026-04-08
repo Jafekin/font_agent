@@ -1,343 +1,204 @@
-"""GraphRAG 检索器 - 基于图遍历的检索能力."""
+"""GraphRAG 检索器：基于 Neo4j 图遍历的检索与查询接口。"""
 
 from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
-from .neo4j_client import Neo4jClient
+from .client import Neo4jClient
 
 logger = logging.getLogger(__name__)
 
 
 @dataclass
 class GraphSearchResult:
-    """图检索结果."""
-
+    """图检索结果。"""
     page_id: str
     score: float
-    evidence_path: List[Dict[str, Any]]
     metadata: Dict[str, Any]
-
-    def to_dict(self) -> Dict[str, Any]:
-        """转换为字典."""
-        return {
-            "page_id": self.page_id,
-            "score": self.score,
-            "evidence_path": self.evidence_path,
-            "metadata": self.metadata,
-        }
+    evidence: List[str]  # 简洁的证据链描述
 
 
 class GraphRetriever:
-    """基于知识图谱的检索器."""
+    """基于知识图谱的检索器，合并了原 retriever + query_interface 的核心功能。"""
 
-    def __init__(self, neo4j_client: Neo4jClient):
-        """初始化检索器.
+    def __init__(self, client: Neo4jClient) -> None:
+        self.client = client
 
-        Args:
-            neo4j_client: Neo4j 客户端实例
-        """
-        self.client = neo4j_client
-
-    # ==================== 基础检索方法 ====================
-
-    def search_by_page_id(self, page_id: str) -> Optional[Dict[str, Any]]:
-        """根据页面 ID 检索完整信息.
-
-        Args:
-            page_id: 页面 ID
-
-        Returns:
-            页面信息及其关联的文献、卷次、版本等
-        """
-        query = """
-        MATCH (p:Page {page_id: $page_id})
-        OPTIONAL MATCH (v:Volume)-[:HAS_PAGE]->(p)
-        OPTIONAL MATCH (d:Document)-[:HAS_VOLUME]->(v)
-        OPTIONAL MATCH (p)-[:BELONGS_TO_EDITION]->(e:Edition)
-        OPTIONAL MATCH (p)-[:HAS_LAYOUT]->(l:Layout)
-        RETURN p, v, d, e, l
-        """
-        results = self.client.execute_query(query, {"page_id": page_id})
-
-        if not results:
+    # ------------------------------------------------------------------
+    # 基础检索
+    # ------------------------------------------------------------------
+    def get_page(self, page_id: str) -> Optional[Dict[str, Any]]:
+        """按 page_id 获取页面及关联信息。"""
+        rows = self.client.query(
+            """
+            MATCH (p:Page {page_id: $pid})
+            OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
+            OPTIONAL MATCH (d:Document)-[:HAS_EDITION]->(e)
+            OPTIONAL MATCH (p)-[:HAS_LAYOUT]->(l:Layout)
+            RETURN p, e, d, l
+            """,
+            {"pid": page_id},
+        )
+        if not rows:
             return None
+        r = rows[0]
+        return {"page": r.get("p"), "edition": r.get("e"),
+                "document": r.get("d"), "layout": r.get("l")}
 
-        result = results[0]
-        return {
-            "page": result.get("p"),
-            "volume": result.get("v"),
-            "document": result.get("d"),
-            "edition": result.get("e"),
-            "layout": result.get("l"),
-        }
-
-    def search_by_document_title(
-        self,
-        title: str,
-        fuzzy: bool = True,
-    ) -> List[Dict[str, Any]]:
-        """根据文献标题检索.
-
-        Args:
-            title: 文献标题
-            fuzzy: 是否模糊匹配
-
-        Returns:
-            匹配的文献列表
-        """
-        if fuzzy:
-            query = """
-            MATCH (d:Document)
-            WHERE d.title CONTAINS $title
-            RETURN d
-            ORDER BY d.title
-            """
-        else:
-            query = """
-            MATCH (d:Document {title: $title})
-            RETURN d
-            """
-
-        results = self.client.execute_query(query, {"title": title})
-        return [r["d"] for r in results]
-
-    def search_by_fulltext(
-        self,
-        text: str,
-        limit: int = 10,
+    def search_by_text(
+        self, text: str, limit: int = 10
     ) -> List[GraphSearchResult]:
-        """全文搜索页面内容.
-
-        Args:
-            text: 搜索文本
-            limit: 返回结果数量
-
-        Returns:
-            检索结果列表
-        """
-        query = """
-        CALL db.index.fulltext.queryNodes('page_ocr_text_idx', $text)
-        YIELD node, score
-        MATCH (node:Page)
-        OPTIONAL MATCH (v:Volume)-[:HAS_PAGE]->(node)
-        OPTIONAL MATCH (d:Document)-[:HAS_VOLUME]->(v)
-        RETURN node.page_id AS page_id, score, node, v, d
-        ORDER BY score DESC
-        LIMIT $limit
-        """
-
-        results = self.client.execute_query(
-            query,
+        """全文检索 OCR 文本（使用 Neo4j fulltext 索引）。"""
+        rows = self.client.query(
+            """
+            CALL db.index.fulltext.queryNodes('page_ocr_idx', $text)
+            YIELD node, score
+            OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(node)
+            OPTIONAL MATCH (d:Document)-[:HAS_EDITION]->(e)
+            RETURN node.page_id AS page_id, score,
+                   node.ocr_text AS ocr_text,
+                   e.version_type AS version_type,
+                   d.title AS title
+            ORDER BY score DESC LIMIT $limit
+            """,
             {"text": text, "limit": limit},
         )
-
-        search_results = []
-        for r in results:
-            evidence_path = [
-                {"type": "Document", "data": r.get("d")},
-                {"type": "Volume", "data": r.get("v")},
-                {"type": "Page", "data": r.get("node")},
-            ]
-
-            search_results.append(
-                GraphSearchResult(
-                    page_id=r["page_id"],
-                    score=r["score"],
-                    evidence_path=evidence_path,
-                    metadata={
-                        "search_type": "fulltext",
-                        "query": text,
-                    },
-                )
+        return [
+            GraphSearchResult(
+                page_id=r["page_id"],
+                score=r["score"],
+                metadata={"title": r.get("title"), "version_type": r.get("version_type")},
+                evidence=[f"全文匹配：得分 {r['score']:.3f}"],
             )
+            for r in rows
+        ]
 
-        return search_results
-
-    # ==================== 关系路径检索 ====================
-
-    def find_similar_pages(
-        self,
-        page_id: str,
-        min_similarity: float = 0.8,
-        limit: int = 10,
+    def find_similar(
+        self, page_id: str, min_score: float = 0.85, limit: int = 10
     ) -> List[GraphSearchResult]:
-        """查找相似页面.
+        """通过 SIMILAR_TO 关系查找相似页面。"""
+        rows = self.client.query(
+            """
+            MATCH (p:Page {page_id: $pid})-[r:SIMILAR_TO]->(p2:Page)
+            WHERE r.score >= $min_score
+            OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p2)
+            RETURN p2.page_id AS page_id, r.score AS score,
+                   e.version_type AS version_type
+            ORDER BY r.score DESC LIMIT $limit
+            """,
+            {"pid": page_id, "min_score": min_score, "limit": limit},
+        )
+        return [
+            GraphSearchResult(
+                page_id=r["page_id"],
+                score=r["score"],
+                metadata={"version_type": r.get("version_type")},
+                evidence=[f"视觉相似度 {r['score']:.3f}（来自 {page_id}）"],
+            )
+            for r in rows
+        ]
 
-        Args:
-            page_id: 源页面 ID
-            min_similarity: 最小相似度阈值
-            limit: 返回结果数量
+    def find_by_edition(self, edition_id: str, limit: int = 100) -> List[GraphSearchResult]:
+        """查找同一版本下的所有页面。"""
+        rows = self.client.query(
+            """
+            MATCH (e:Edition {edition_id: $eid})-[:HAS_PAGE]->(p:Page)
+            RETURN p.page_id AS page_id
+            ORDER BY p.page_id LIMIT $limit
+            """,
+            {"eid": edition_id, "limit": limit},
+        )
+        return [
+            GraphSearchResult(
+                page_id=r["page_id"],
+                score=1.0,
+                metadata={"edition_id": edition_id},
+                evidence=[f"同版本 {edition_id}"],
+            )
+            for r in rows
+        ]
 
-        Returns:
-            相似页面列表
-        """
-        query = """
-        MATCH (p1:Page {page_id: $page_id})-[r:SIMILAR_TO]->(p2:Page)
-        WHERE r.similarity_score >= $min_similarity
-        OPTIONAL MATCH (v:Volume)-[:HAS_PAGE]->(p2)
-        OPTIONAL MATCH (d:Document)-[:HAS_VOLUME]->(v)
-        RETURN p2.page_id AS page_id, r.similarity_score AS score, p2, v, d, r
-        ORDER BY score DESC
-        LIMIT $limit
-        """
+    def find_by_entity(self, entity_text: str, limit: int = 20) -> List[GraphSearchResult]:
+        """查找提及某实体的所有页面。"""
+        rows = self.client.query(
+            """
+            MATCH (p:Page)-[:MENTIONS]->(ent:Entity {entity_text: $et})
+            OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
+            RETURN p.page_id AS page_id, e.version_type AS version_type
+            LIMIT $limit
+            """,
+            {"et": entity_text, "limit": limit},
+        )
+        return [
+            GraphSearchResult(
+                page_id=r["page_id"],
+                score=1.0,
+                metadata={"version_type": r.get("version_type")},
+                evidence=[f"提及实体：{entity_text}"],
+            )
+            for r in rows
+        ]
 
-        results = self.client.execute_query(
-            query,
-            {
-                "page_id": page_id,
-                "min_similarity": min_similarity,
-                "limit": limit,
-            },
+    # ------------------------------------------------------------------
+    # 版本推断
+    # ------------------------------------------------------------------
+    def infer_edition(
+        self, page_id: str, min_score: float = 0.85
+    ) -> Optional[Dict[str, Any]]:
+        """通过相似页面投票推断未知页面所属版本。"""
+        rows = self.client.query(
+            """
+            MATCH (p:Page {page_id: $pid})-[r:SIMILAR_TO]->(p2:Page)
+            WHERE r.score >= $min_score
+            MATCH (e:Edition)-[:HAS_PAGE]->(p2)
+            RETURN e.edition_id AS edition_id,
+                   e.version_type AS version_type,
+                   count(p2) AS votes,
+                   avg(r.score) AS avg_score
+            ORDER BY votes DESC, avg_score DESC
+            LIMIT 1
+            """,
+            {"pid": page_id, "min_score": min_score},
+        )
+        if not rows:
+            return None
+        r = rows[0]
+        return {
+            "edition_id": r["edition_id"],
+            "version_type": r["version_type"],
+            "votes": r["votes"],
+            "avg_score": r["avg_score"],
+            "confidence": min(1.0, r["votes"] / 5 * r["avg_score"]),
+        }
+
+    # ------------------------------------------------------------------
+    # 统计与运维
+    # ------------------------------------------------------------------
+    def get_edition_stats(self) -> List[Dict[str, Any]]:
+        """返回各版本的页面数量统计。"""
+        return self.client.query(
+            """
+            MATCH (e:Edition)-[:HAS_PAGE]->(p:Page)
+            RETURN e.edition_id AS edition_id,
+                   e.version_type AS version_type,
+                   count(p) AS page_count
+            ORDER BY page_count DESC
+            """
         )
 
-        search_results = []
-        for r in results:
-            evidence_path = [
-                {"type": "Page", "id": page_id, "relation": "SIMILAR_TO"},
-                {"type": "Page", "data": r.get("p2")},
-                {"type": "Volume", "data": r.get("v")},
-                {"type": "Document", "data": r.get("d")},
-            ]
-
-            search_results.append(
-                GraphSearchResult(
-                    page_id=r["page_id"],
-                    score=r["score"],
-                    evidence_path=evidence_path,
-                    metadata={
-                        "search_type": "similarity",
-                        "source_page": page_id,
-                        "similarity_type": r.get("r", {}).get("similarity_type", "visual"),
-                    },
-                )
-            )
-
-        return search_results
-
-    def find_pages_by_edition(
-        self,
-        edition_id: str,
-        limit: int = 50,
-    ) -> List[GraphSearchResult]:
-        """查找特定版本的所有页面.
-
-        Args:
-            edition_id: 版本 ID
-            limit: 返回结果数量
-
-        Returns:
-            页面列表
-        """
-        query = """
-        MATCH (p:Page)-[r:BELONGS_TO_EDITION]->(e:Edition {edition_id: $edition_id})
-        OPTIONAL MATCH (v:Volume)-[:HAS_PAGE]->(p)
-        OPTIONAL MATCH (d:Document)-[:HAS_VOLUME]->(v)
-        RETURN p.page_id AS page_id, r.confidence AS score, p, v, d, e
-        ORDER BY v.volume_number, p.page_number
-        LIMIT $limit
-        """
-
-        results = self.client.execute_query(
-            query,
-            {"edition_id": edition_id, "limit": limit},
+    def get_entity_cooccurrence(
+        self, entity_text: str, limit: int = 10
+    ) -> List[Dict[str, Any]]:
+        """查找与某实体共现频率最高的其他实体。"""
+        return self.client.query(
+            """
+            MATCH (p:Page)-[:MENTIONS]->(e1:Entity {entity_text: $et})
+            MATCH (p)-[:MENTIONS]->(e2:Entity)
+            WHERE e1 <> e2
+            RETURN e2.entity_text AS entity, count(p) AS cooccur
+            ORDER BY cooccur DESC LIMIT $limit
+            """,
+            {"et": entity_text, "limit": limit},
         )
-
-        search_results = []
-        for r in results:
-            evidence_path = [
-                {"type": "Edition", "data": r.get("e")},
-                {"type": "Page", "data": r.get("p")},
-                {"type": "Volume", "data": r.get("v")},
-                {"type": "Document", "data": r.get("d")},
-            ]
-
-            search_results.append(
-                GraphSearchResult(
-                    page_id=r["page_id"],
-                    score=r.get("score", 1.0),
-                    evidence_path=evidence_path,
-                    metadata={
-                        "search_type": "edition",
-                        "edition_id": edition_id,
-                    },
-                )
-            )
-
-        return search_results
-
-    def find_pages_by_layout(
-        self,
-        column_count: Optional[int] = None,
-        border_type: Optional[str] = None,
-        border_color: Optional[str] = None,
-        limit: int = 50,
-    ) -> List[GraphSearchResult]:
-        """根据版式特征查找页面.
-
-        Args:
-            column_count: 列数
-            border_type: 边框类型
-            border_color: 边框颜色
-            limit: 返回结果数量
-
-        Returns:
-            匹配的页面列表
-        """
-        conditions = []
-        params = {"limit": limit}
-
-        if column_count is not None:
-            conditions.append("l.column_count = $column_count")
-            params["column_count"] = column_count
-
-        if border_type is not None:
-            conditions.append("l.border_type = $border_type")
-            params["border_type"] = border_type
-
-        if border_color is not None:
-            conditions.append("l.border_color = $border_color")
-            params["border_color"] = border_color
-
-        where_clause = " AND ".join(conditions) if conditions else "true"
-
-        query = f"""
-        MATCH (p:Page)-[:HAS_LAYOUT]->(l:Layout)
-        WHERE {where_clause}
-        OPTIONAL MATCH (v:Volume)-[:HAS_PAGE]->(p)
-        OPTIONAL MATCH (d:Document)-[:HAS_VOLUME]->(v)
-        RETURN p.page_id AS page_id, p, l, v, d
-        ORDER BY d.title, v.volume_number, p.page_number
-        LIMIT $limit
-        """
-
-        results = self.client.execute_query(query, params)
-
-        search_results = []
-        for r in results:
-            evidence_path = [
-                {"type": "Layout", "data": r.get("l")},
-                {"type": "Page", "data": r.get("p")},
-                {"type": "Volume", "data": r.get("v")},
-                {"type": "Document", "data": r.get("d")},
-            ]
-
-            search_results.append(
-                GraphSearchResult(
-                    page_id=r["page_id"],
-                    score=1.0,
-                    evidence_path=evidence_path,
-                    metadata={
-                        "search_type": "layout",
-                        "filters": {
-                            "column_count": column_count,
-                            "border_type": border_type,
-                            "border_color": border_color,
-                        },
-                    },
-                )
-            )
-
-        return search_results

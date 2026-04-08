@@ -1,426 +1,314 @@
-"""图谱构建器 - 从 metadata.json 构建知识图谱."""
+"""GraphRAG 图谱构建器：从 rag/data/ 加载 PageData，写入 Neo4j 知识图谱。
+
+数据流:
+  NaiveDataLoader → PageData → Document / Edition / Collection / Page / Layout / Entity
+"""
 
 from __future__ import annotations
 
 import hashlib
-import json
 import logging
-from datetime import datetime
+import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set, Tuple
 
-from .models import Collection, Document, Edition, Layout, Page, Volume
-from .neo4j_client import Neo4jClient
+import numpy as np
+
+from rag.naive.data_loader import NaiveDataLoader, PageData
+
+from .client import Neo4jClient
+from .models import Collection, Document, Edition, Entity, Layout, Page
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# 简单正则实体抽取（人名用"·"分隔的汉字串；地名匹配常见地名词缀）
+# ---------------------------------------------------------------------------
+_PERSON_PATTERN = re.compile(
+    r"(?:司马迁|班固|刘向|左丘明|孔子|孟子|荀子|韩非|庄子|[A-Z\u4e00-\u9fa5]{2,4}(?:撰|著|编|注|疏|校))"
+)
+_PLACE_PATTERN = re.compile(
+    r"[京都郡县州府国]{0,1}[\u4e00-\u9fa5]{1,3}(?:京|都|郡|县|州|府|国|城|关|山|水|湖|江|河|海)"
+)
 
+
+def _extract_entities(text: str) -> List[Tuple[str, str]]:
+    """从 OCR 文本中提取 (文字, 类型) 对，类型为 PERSON 或 PLACE。"""
+    entities: List[Tuple[str, str]] = []
+    for m in _PERSON_PATTERN.finditer(text):
+        name = m.group().rstrip("撰著编注疏校")
+        if len(name) >= 2:
+            entities.append((name, "PERSON"))
+    for m in _PLACE_PATTERN.finditer(text):
+        entities.append((m.group(), "PLACE"))
+    return entities
+
+
+def _entity_id(text: str, etype: str) -> str:
+    return hashlib.md5(f"{etype}:{text}".encode()).hexdigest()[:12]
+
+
+def _layout_id(line_count: int, has_annotation: bool) -> str:
+    return f"layout_{line_count}_{int(has_annotation)}"
+
+
+# ---------------------------------------------------------------------------
+# 主构建器
+# ---------------------------------------------------------------------------
 class GraphBuilder:
-    """知识图谱构建器."""
+    """从 NaiveDataLoader 加载数据并写入 Neo4j 知识图谱。"""
 
-    def __init__(self, neo4j_client: Neo4jClient):
-        """初始化构建器.
+    def __init__(self, client: Neo4jClient) -> None:
+        self.client = client
 
-        Args:
-            neo4j_client: Neo4j 客户端实例
-        """
-        self.client = neo4j_client
-
-    def build_from_metadata(
+    # ------------------------------------------------------------------
+    # 公共入口
+    # ------------------------------------------------------------------
+    def build(
         self,
-        metadata_path: Path,
-        embeddings_path: Optional[Path] = None,
+        data_dir: str | Path,
+        *,
+        extract_entities: bool = True,
+        embeddings_path: Optional[str | Path] = None,
+        ids_path: Optional[str | Path] = None,
+        similarity_threshold: float = 0.88,
+        similarity_top_k: int = 10,
     ) -> Dict[str, int]:
-        """从 metadata.json 构建图谱.
+        """完整构建流程。
 
         Args:
-            metadata_path: metadata.json 文件路径
-            embeddings_path: embeddings.npy 文件路径（可选）
+            data_dir: rag/data/ 目录路径
+            extract_entities: 是否从 OCR 文本提取命名实体
+            embeddings_path: embeddings.npy 路径（用于构建 SIMILAR_TO 关系）
+            ids_path: ids.json 路径
+            similarity_threshold: 相似度阈值
+            similarity_top_k: 每页保留的相似关系数量
 
         Returns:
-            构建统计信息
+            各类型节点/关系计数字典
         """
-        logger.info(f"开始从 {metadata_path} 构建图谱")
+        loader = NaiveDataLoader(data_dir)
+        pages = loader.scan_pages()
+        logger.info("加载 %d 页，开始构建图谱…", len(pages))
 
-        # 加载 metadata
-        with open(metadata_path, "r", encoding="utf-8") as f:
-            metadata_list = json.load(f)
-
-        logger.info(f"加载了 {len(metadata_list)} 条元数据")
-
-        stats = {
-            "documents": 0,
-            "volumes": 0,
-            "pages": 0,
-            "layouts": 0,
-            "editions": 0,
-            "collections": 0,
-            "relationships": 0,
+        stats: Dict[str, int] = {
+            "documents": 0, "editions": 0, "collections": 0,
+            "pages": 0, "layouts": 0, "entities": 0,
+            "similar_relations": 0,
         }
 
-        # 用于去重和缓存
-        created_docs = set()
-        created_volumes = set()
-        created_layouts = {}  # layout_signature -> layout_id
-        created_editions = set()
-        created_collections = set()
+        created_docs: Set[str] = set()
+        created_editions: Set[str] = set()
+        created_collections: Set[str] = set()
+        created_layouts: Set[str] = set()
+        created_entities: Set[str] = set()
 
-        # 遍历每条元数据
-        for idx, item in enumerate(metadata_list, 1):
-            if idx % 10 == 0:
-                logger.info(f"处理进度: {idx}/{len(metadata_list)}")
-
+        for i, page in enumerate(pages, 1):
+            if i % 50 == 0:
+                logger.info("进度 %d/%d", i, len(pages))
             try:
-                # 提取基本信息
-                doc_id = self._extract_doc_id(item)
-                volume_id = self._extract_volume_id(item)
-                page_id = item.get("id", f"page_{idx}")
+                self._ingest_page(
+                    page,
+                    created_docs, created_editions, created_collections,
+                    created_layouts, created_entities,
+                    extract_entities, stats,
+                )
+            except Exception as exc:
+                logger.warning("跳过页面 %s: %s", page.page_id, exc)
 
-                # 1. 创建 Document
-                if doc_id and doc_id not in created_docs:
-                    doc = self._create_document_from_metadata(item, doc_id)
-                    self.client.create_document(doc.to_dict())
-                    created_docs.add(doc_id)
-                    stats["documents"] += 1
+        if embeddings_path and ids_path:
+            stats["similar_relations"] = self._build_similarity(
+                Path(embeddings_path), Path(ids_path),
+                similarity_threshold, similarity_top_k,
+            )
 
-                # 2. 创建 Volume
-                if volume_id and volume_id not in created_volumes:
-                    volume = self._create_volume_from_metadata(item, volume_id)
-                    self.client.create_volume(volume.to_dict())
-                    created_volumes.add(volume_id)
-                    stats["volumes"] += 1
-
-                    # 创建 Document-Volume 关系
-                    if doc_id:
-                        self.client.create_has_volume_relation(
-                            doc_id,
-                            volume_id,
-                            sequence=self._extract_volume_number(item),
-                        )
-                        stats["relationships"] += 1
-
-                # 3. 创建 Page
-                page = self._create_page_from_metadata(item, page_id)
-                self.client.create_page(page.to_dict())
-                stats["pages"] += 1
-
-                # 创建 Volume-Page 关系
-                if volume_id:
-                    self.client.create_has_page_relation(
-                        volume_id,
-                        page_id,
-                        sequence=page.page_number,
-                    )
-                    stats["relationships"] += 1
-
-                # 4. 创建 Layout（如果有版式信息）
-                layout_info = self._extract_layout_info(item)
-                if layout_info:
-                    layout_sig = self._get_layout_signature(layout_info)
-                    if layout_sig not in created_layouts:
-                        layout_id = f"layout_{hashlib.md5(layout_sig.encode()).hexdigest()[:8]}"
-                        layout = Layout(layout_id=layout_id, **layout_info)
-                        self.client.create_layout(layout.to_dict())
-                        created_layouts[layout_sig] = layout_id
-                        stats["layouts"] += 1
-                    else:
-                        layout_id = created_layouts[layout_sig]
-
-                    # 创建 Page-Layout 关系
-                    self.client.create_has_layout_relation(page_id, layout_id)
-                    stats["relationships"] += 1
-
-                # 5. 创建 Edition（如果有版本信息）
-                edition_info = self._extract_edition_info(item)
-                if edition_info:
-                    edition_id = edition_info.get("edition_id")
-                    if edition_id and edition_id not in created_editions:
-                        edition = Edition(**edition_info)
-                        self.client.create_edition(edition.to_dict())
-                        created_editions.add(edition_id)
-                        stats["editions"] += 1
-
-                    # 创建 Page-Edition 关系
-                    if edition_id:
-                        self.client.create_belongs_to_edition_relation(
-                            page_id,
-                            edition_id,
-                            confidence=0.9,
-                            identified_by="auto",
-                        )
-                        stats["relationships"] += 1
-
-                # 6. 创建 Collection（如果有馆藏信息）
-                collection_info = self._extract_collection_info(item)
-                if collection_info:
-                    collection_id = collection_info.get("collection_id")
-                    if collection_id and collection_id not in created_collections:
-                        collection = Collection(**collection_info)
-                        self.client.create_collection(collection.to_dict())
-                        created_collections.add(collection_id)
-                        stats["collections"] += 1
-
-                    # 创建 Document-Collection 关系
-                    if doc_id and collection_id:
-                        self.client.create_stored_in_relation(
-                            doc_id,
-                            collection_id,
-                            completeness="完整",
-                        )
-                        stats["relationships"] += 1
-
-            except Exception as e:
-                logger.error(f"处理第 {idx} 条元数据时出错: {e}")
-                continue
-
-        logger.info(f"图谱构建完成: {stats}")
+        logger.info("图谱构建完成: %s", stats)
         return stats
 
-    def build_similarity_relations(
+    # ------------------------------------------------------------------
+    # 单页写入
+    # ------------------------------------------------------------------
+    def _ingest_page(
+        self,
+        page: PageData,
+        created_docs: Set[str],
+        created_editions: Set[str],
+        created_collections: Set[str],
+        created_layouts: Set[str],
+        created_entities: Set[str],
+        extract_entities: bool,
+        stats: Dict[str, int],
+    ) -> None:
+        e = page.edition
+
+        # ---- Document ----
+        doc_id = f"doc_{e.edition_dir or 'unknown'}"
+        if doc_id not in created_docs:
+            doc = Document(
+                doc_id=doc_id,
+                title=e.edition_dir or "未知文献",
+                dynasty=e.printing_info.dynasty_period,
+                authors=list(e.authors),
+                annotators=list(e.annotators),
+                total_juan=e.total_juan,
+            )
+            self.client.merge_node("Document", "doc_id", doc.to_dict())
+            created_docs.add(doc_id)
+            stats["documents"] += 1
+
+        # ---- Edition ----
+        edition_id = f"edition_{e.version_type or 'unknown'}_{e.edition_dir or 'x'}"
+        if edition_id not in created_editions:
+            catalog = (
+                f"{e.catalog_id_secondary}{e.catalog_id_main}"
+                if e.catalog_id_secondary else e.catalog_id_main
+            ) or None
+            edition = Edition(
+                edition_id=edition_id,
+                version_type=e.version_type or "",
+                annotation_system=e.annotation_system,
+                dynasty=e.printing_info.dynasty_period,
+                printer=e.printing_info.printer,
+                extant_juan=e.extant_juan,
+                catalog_id=catalog,
+            )
+            self.client.merge_node("Edition", "edition_id", edition.to_dict())
+            # Document -[:HAS_EDITION]-> Edition
+            self.client.merge_relation(
+                "Document", "doc_id", doc_id,
+                "HAS_EDITION",
+                "Edition", "edition_id", edition_id,
+            )
+            created_editions.add(edition_id)
+            stats["editions"] += 1
+
+        # ---- Collection ----
+        if e.holding_institution:
+            coll_id = hashlib.md5(e.holding_institution.encode()).hexdigest()[:10]
+            if coll_id not in created_collections:
+                catalog_main = e.catalog_id_main or None
+                coll = Collection(
+                    collection_id=coll_id,
+                    institution=e.holding_institution,
+                    call_number=catalog_main,
+                )
+                self.client.merge_node("Collection", "collection_id", coll.to_dict())
+                self.client.merge_relation(
+                    "Document", "doc_id", doc_id,
+                    "STORED_IN",
+                    "Collection", "collection_id", coll_id,
+                )
+                created_collections.add(coll_id)
+                stats["collections"] += 1
+
+        # ---- Page ----
+        image_path = str(page.overlay_image or page.source_image or "")
+        pg = Page(
+            page_id=page.page_id,
+            image_path=image_path,
+            ocr_text=page.full_text[:2000] if page.full_text else None,
+            ocr_confidence=page.ocr_stats.average_confidence or None,
+            is_vertical=page.ocr_stats.is_vertical,
+            width=page.ocr_stats.image_width or None,
+            height=page.ocr_stats.image_height or None,
+        )
+        self.client.merge_node("Page", "page_id", pg.to_dict())
+        # Edition -[:HAS_PAGE]-> Page
+        self.client.merge_relation(
+            "Edition", "edition_id", edition_id,
+            "HAS_PAGE",
+            "Page", "page_id", page.page_id,
+        )
+        stats["pages"] += 1
+
+        # ---- Layout ----
+        line_count = page.ocr_stats.line_count
+        has_annotation = len(page.ocr_lines) > line_count * 1.5 if line_count else False
+        lid = _layout_id(line_count, has_annotation)
+        if lid not in created_layouts:
+            layout = Layout(
+                layout_id=lid,
+                line_count=line_count or None,
+                has_annotation=has_annotation,
+            )
+            self.client.merge_node("Layout", "layout_id", layout.to_dict())
+            created_layouts.add(lid)
+            stats["layouts"] += 1
+        self.client.merge_relation(
+            "Page", "page_id", page.page_id,
+            "HAS_LAYOUT",
+            "Layout", "layout_id", lid,
+        )
+
+        # ---- Entities ----
+        if extract_entities and page.full_text:
+            for entity_text, entity_type in _extract_entities(page.full_text):
+                eid = _entity_id(entity_text, entity_type)
+                if eid not in created_entities:
+                    ent = Entity(
+                        entity_id=eid,
+                        entity_text=entity_text,
+                        entity_type=entity_type,
+                    )
+                    self.client.merge_node("Entity", "entity_id", ent.to_dict())
+                    created_entities.add(eid)
+                    stats["entities"] += 1
+                self.client.merge_relation(
+                    "Page", "page_id", page.page_id,
+                    "MENTIONS",
+                    "Entity", "entity_id", eid,
+                )
+
+    # ------------------------------------------------------------------
+    # 相似关系构建
+    # ------------------------------------------------------------------
+    def _build_similarity(
         self,
         embeddings_path: Path,
         ids_path: Path,
-        top_k: int = 10,
-        threshold: float = 0.8,
+        threshold: float,
+        top_k: int,
     ) -> int:
-        """构建页面相似关系.
+        """从 embeddings.npy / ids.json 构建 SIMILAR_TO 关系。"""
+        import json
+        if not embeddings_path.exists() or not ids_path.exists():
+            logger.warning("embeddings 或 ids 文件不存在，跳过相似关系构建。")
+            return 0
 
-        Args:
-            embeddings_path: embeddings.npy 文件路径
-            ids_path: ids.json 文件路径
-            top_k: 每个页面保留的最相似页面数
-            threshold: 相似度阈值
+        emb = np.load(embeddings_path).astype("float32")
+        norms = np.linalg.norm(emb, axis=1, keepdims=True)
+        norms[norms == 0] = 1
+        emb = emb / norms
 
-        Returns:
-            创建的关系数量
-        """
-        import numpy as np
-
-        logger.info("开始构建相似关系")
-
-        # 加载嵌入向量和 ID
-        embeddings = np.load(embeddings_path)
         with open(ids_path, "r", encoding="utf-8") as f:
-            ids = json.load(f)
+            ids: List[str] = json.load(f)
 
-        logger.info(f"加载了 {len(embeddings)} 个嵌入向量")
+        if len(ids) != len(emb):
+            logger.error("ids 与 embeddings 数量不匹配，跳过。")
+            return 0
 
-        # 计算相似度矩阵（分批处理避免内存溢出）
-        batch_size = 100
-        relation_count = 0
+        n = len(ids)
+        total = 0
+        batch = 100
+        for start in range(0, n, batch):
+            end = min(start + batch, n)
+            scores = emb[start:end] @ emb.T  # (batch, n)
+            for local_i, global_i in enumerate(range(start, end)):
+                row = scores[local_i]
+                row[global_i] = -1  # 排除自身
+                best = np.argsort(row)[::-1][:top_k]
+                for j in best:
+                    s = float(row[j])
+                    if s < threshold:
+                        break
+                    self.client.merge_relation(
+                        "Page", "page_id", ids[global_i],
+                        "SIMILAR_TO",
+                        "Page", "page_id", ids[j],
+                        rel_props={"score": round(s, 4)},
+                    )
+                    total += 1
+            logger.debug("相似关系进度 %d/%d", end, n)
 
-        for i in range(0, len(embeddings), batch_size):
-            batch_end = min(i + batch_size, len(embeddings))
-            batch_embeddings = embeddings[i:batch_end]
-
-            # 计算当前批次与所有向量的相似度
-            similarities = np.dot(batch_embeddings, embeddings.T)
-
-            # 对每个向量找出 Top-K 相似
-            for j, sim_scores in enumerate(similarities):
-                page_idx = i + j
-                page_id = ids[page_idx]
-
-                # 获取 Top-K（排除自己）
-                top_indices = np.argsort(sim_scores)[::-1][1: top_k + 1]
-
-                for similar_idx in top_indices:
-                    similarity_score = float(sim_scores[similar_idx])
-
-                    if similarity_score >= threshold:
-                        similar_page_id = ids[similar_idx]
-
-                        try:
-                            self.client.create_similar_to_relation(
-                                page_id,
-                                similar_page_id,
-                                similarity_score,
-                                similarity_type="visual",
-                            )
-                            relation_count += 1
-                        except Exception as e:
-                            logger.warning(f"创建相似关系失败: {e}")
-
-            if (i // batch_size + 1) % 10 == 0:
-                logger.info(f"已处理 {batch_end}/{len(embeddings)} 个向量")
-
-        logger.info(f"创建了 {relation_count} 个相似关系")
-        return relation_count
-
-    # ==================== 辅助方法 ====================
-
-    def _extract_doc_id(self, item: Dict[str, Any]) -> Optional[str]:
-        """从元数据提取文献 ID."""
-        # 尝试从不同字段提取
-        if "document_id" in item:
-            return item["document_id"]
-        if "doc_id" in item:
-            return item["doc_id"]
-
-        # 从文件路径推断
-        image_path = item.get("image_path", "")
-        if image_path:
-            parts = Path(image_path).parts
-            if len(parts) >= 2:
-                return f"doc_{parts[-2]}"
-
-        return None
-
-    def _extract_volume_id(self, item: Dict[str, Any]) -> Optional[str]:
-        """从元数据提取卷次 ID."""
-        if "volume_id" in item:
-            return item["volume_id"]
-
-        # 从文件路径推断
-        image_path = item.get("image_path", "")
-        if image_path:
-            parts = Path(image_path).parts
-            if len(parts) >= 2:
-                return f"vol_{parts[-2]}_{self._extract_volume_number(item):03d}"
-
-        return None
-
-    def _extract_volume_number(self, item: Dict[str, Any]) -> int:
-        """从元数据提取卷号."""
-        if "volume_number" in item:
-            return item["volume_number"]
-
-        # 从文件名推断（假设格式为 vol1_p1.jpg）
-        image_path = item.get("image_path", "")
-        if image_path:
-            filename = Path(image_path).stem
-            if "vol" in filename.lower():
-                try:
-                    vol_part = filename.lower().split("vol")[1].split("_")[0]
-                    return int(vol_part)
-                except (IndexError, ValueError):
-                    pass
-
-        return 1
-
-    def _create_document_from_metadata(
-        self,
-        item: Dict[str, Any],
-        doc_id: str,
-    ) -> Document:
-        """从元数据创建 Document 对象."""
-        return Document(
-            doc_id=doc_id,
-            title=item.get("title", "未知文献"),
-            author=item.get("author"),
-            dynasty=item.get("dynasty"),
-            category=item.get("category"),
-            description=item.get("description"),
-            created_at=datetime.now(),
-            updated_at=datetime.now(),
-        )
-
-    def _create_volume_from_metadata(
-        self,
-        item: Dict[str, Any],
-        volume_id: str,
-    ) -> Volume:
-        """从元数据创建 Volume 对象."""
-        return Volume(
-            volume_id=volume_id,
-            volume_number=self._extract_volume_number(item),
-            volume_title=item.get("volume_title"),
-            page_count=item.get("page_count"),
-            description=item.get("volume_description"),
-        )
-
-    def _create_page_from_metadata(
-        self,
-        item: Dict[str, Any],
-        page_id: str,
-    ) -> Page:
-        """从元数据创建 Page 对象."""
-        image_path = item.get("image_path", "")
-
-        # 计算图片哈希
-        image_hash = None
-        if image_path and Path(image_path).exists():
-            try:
-                with open(image_path, "rb") as f:
-                    image_hash = hashlib.md5(f.read()).hexdigest()
-            except Exception:
-                pass
-
-        return Page(
-            page_id=page_id,
-            page_number=item.get("page_number", 1),
-            image_path=image_path,
-            image_hash=image_hash,
-            ocr_text=item.get("ocr_text"),
-            ocr_confidence=item.get("ocr_confidence"),
-            text_direction=item.get("text_direction", "vertical"),
-            width=item.get("width"),
-            height=item.get("height"),
-            created_at=datetime.now(),
-        )
-
-    def _extract_layout_info(self, item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """从元数据提取版式信息."""
-        layout_fields = [
-            "column_count",
-            "line_count",
-            "chars_per_line",
-            "border_type",
-            "border_color",
-            "has_fish_tail",
-            "has_annotation",
-            "annotation_position",
-        ]
-
-        layout_info = {}
-        for field in layout_fields:
-            if field in item:
-                layout_info[field] = item[field]
-
-        return layout_info if layout_info else None
-
-    def _get_layout_signature(self, layout_info: Dict[str, Any]) -> str:
-        """生成版式签名（用于去重）."""
-        sig_parts = [
-            str(layout_info.get("column_count", "")),
-            str(layout_info.get("line_count", "")),
-            str(layout_info.get("border_type", "")),
-            str(layout_info.get("border_color", "")),
-        ]
-        return "_".join(sig_parts)
-
-    def _extract_edition_info(self, item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """从元数据提取版本信息."""
-        if "edition_id" not in item and "edition_type" not in item:
-            return None
-
-        return {
-            "edition_id": item.get("edition_id", f"ed_{item.get('edition_type', 'unknown')}"),
-            "edition_type": item.get("edition_type", "未知"),
-            "edition_name": item.get("edition_name"),
-            "publisher": item.get("publisher"),
-            "publish_year": item.get("publish_year"),
-            "publish_place": item.get("publish_place"),
-            "description": item.get("edition_description"),
-        }
-
-    def _extract_collection_info(self, item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """从元数据提取馆藏信息."""
-        if "institution" not in item and "collection_id" not in item:
-            return None
-
-        institution = item.get("institution", "未知机构")
-        collection_id = item.get(
-            "collection_id",
-            f"coll_{hashlib.md5(institution.encode()).hexdigest()[:8]}",
-        )
-
-        return {
-            "collection_id": collection_id,
-            "institution": institution,
-            "call_number": item.get("call_number"),
-            "location": item.get("location"),
-            "acquisition_date": item.get("acquisition_date"),
-            "condition": item.get("condition"),
-            "notes": item.get("collection_notes"),
-        }
+        logger.info("构建 SIMILAR_TO 关系 %d 条。", total)
+        return total
