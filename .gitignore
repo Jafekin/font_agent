@@ -136,8 +136,11 @@ dmypy.json
 /data/名录 史记2025-11-6
 /model/*
 /data/*
-/outputs/*
+rag/graph/data*
 /rag/naive/data/*
+rag/model/*
+ocr/data/*
+rag/data/*
 
 # OS
 .DS_Store

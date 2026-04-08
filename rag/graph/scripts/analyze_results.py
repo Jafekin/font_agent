@@ -78,7 +78,7 @@ class ShijiDatasetAnalyzer:
         version_stats = {}
 
         for result in results:
-            version = result.get('image_metadata', {}).get('version_type', 'Unknown')
+            version = result.get('edition_metadata', {}).get('version_type', 'Unknown')
 
             if version not in version_stats:
                 version_stats[version] = {
@@ -117,7 +117,7 @@ class ShijiDatasetAnalyzer:
         library_stats = {}
 
         for result in results:
-            library = result.get('image_metadata', {}).get('library', 'Unknown')
+            library = result.get('edition_metadata', {}).get('holding_institution', 'Unknown')
 
             if library not in library_stats:
                 library_stats[library] = {
