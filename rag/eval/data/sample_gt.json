@@ -1,0 +1,37 @@
+[
+  {
+    "query_id": "q001",
+    "query_text": "五帝本紀",
+    "query_image": null,
+    "relevant_pages": ["page_shiji_001", "page_shiji_002"],
+    "reference_answer": "五帝本紀是《史记》的第一篇，记载黄帝、颛顼、帝喾、尧、舜五位上古帝王的事迹。"
+  },
+  {
+    "query_id": "q002",
+    "query_text": "司马迁撰",
+    "query_image": null,
+    "relevant_pages": ["page_shiji_001", "page_shiji_003", "page_shiji_010"],
+    "reference_answer": "司马迁，字子长，西汉史学家，著《史记》一百三十卷。"
+  },
+  {
+    "query_id": "q003",
+    "query_text": "明嘉靖刻本",
+    "query_image": null,
+    "relevant_pages": ["page_shiji_005", "page_shiji_006"],
+    "reference_answer": "明嘉靖四至六年（1525-1527）王延喆刻本，现藏四川省图书馆。"
+  },
+  {
+    "query_id": "q004",
+    "query_text": "裴骃集解",
+    "query_image": null,
+    "relevant_pages": ["page_shiji_002", "page_shiji_004"],
+    "reference_answer": "裴骃，南朝宋人，为《史记》作集解，是三家注之一。"
+  },
+  {
+    "query_id": "q005",
+    "query_text": "项羽本纪",
+    "query_image": null,
+    "relevant_pages": ["page_shiji_020", "page_shiji_021", "page_shiji_022"],
+    "reference_answer": "项羽本纪是《史记》第七篇，记载西楚霸王项羽的生平事迹。"
+  }
+]
