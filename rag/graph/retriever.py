@@ -4,11 +4,18 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from .client import Neo4jClient
 
 logger = logging.getLogger(__name__)
+
+# 边类型语义权重（越高表示关联越强）
+_EDGE_WEIGHTS: Dict[str, float] = {
+    "SAME_EDITION": 1.0,    # 同版本前后页
+    "MENTIONS_ENTITY": 0.7,  # 共享命名实体
+    "SIMILAR_TO": 0.1,      # 版式视觉相似
+}
 
 
 @dataclass
@@ -69,7 +76,8 @@ class GraphRetriever:
             GraphSearchResult(
                 page_id=r["page_id"],
                 score=r["score"],
-                metadata={"title": r.get("title"), "version_type": r.get("version_type")},
+                metadata={"title": r.get(
+                    "title"), "version_type": r.get("version_type")},
                 evidence=[f"全文匹配：得分 {r['score']:.3f}"],
             )
             for r in rows
@@ -187,6 +195,151 @@ class GraphRetriever:
             ORDER BY page_count DESC
             """
         )
+
+    # ------------------------------------------------------------------
+    # 混合检索（向量种子 + 图谱 BFS 扩展）
+    # ------------------------------------------------------------------
+    def hybrid_search(
+        self,
+        seeds: List[Tuple[str, float]],
+        *,
+        bfs_depth: int = 1,
+        top_k: int = 10,
+        sim_threshold: float = 0.5,
+    ) -> List[GraphSearchResult]:
+        """基于向量检索种子，在图谱中执行 BFS 扩展并按综合得分排序。
+
+        Args:
+            seeds: 向量检索返回的 (page_id, vector_score) 列表，作为 BFS 起点。
+            bfs_depth: BFS 扩展层数（默认 1 层）。
+            top_k: 最终返回结果数。
+            sim_threshold: SIMILAR_TO 边的最低分数阈值。
+
+        Returns:
+            按综合关联度排序的 GraphSearchResult 列表，含图谱关系路径。
+        """
+        if not seeds:
+            return []
+
+        # 累积得分表：page_id -> (score, evidence列表)
+        scores: Dict[str, float] = {}
+        evidence_map: Dict[str, List[str]] = {}
+
+        def _add(pid: str, delta: float, ev: str) -> None:
+            scores[pid] = scores.get(pid, 0.0) + delta
+            evidence_map.setdefault(pid, []).append(ev)
+
+        seed_ids = set()
+        for pid, vscore in seeds:
+            _add(pid, vscore, f"向量相似度 {vscore:.3f}")
+            seed_ids.add(pid)
+
+        frontier = list(seed_ids)
+        for _depth in range(bfs_depth):
+            if not frontier:
+                break
+            next_frontier: List[str] = []
+            for pid in frontier:
+                neighbors = self._expand_one_hop(pid, sim_threshold)
+                for npid, edge_type, edge_score in neighbors:
+                    weight = _EDGE_WEIGHTS.get(edge_type, 0.3)
+                    # 衰减：非种子节点得分乘以层级衰减因子
+                    decay = 0.6 ** (_depth + 1)
+                    delta = edge_score * weight * decay
+                    _add(npid, delta,
+                         f"{edge_type}({pid}→{npid}, w={weight:.1f})")
+                    if npid not in seed_ids:
+                        next_frontier.append(npid)
+            frontier = list(dict.fromkeys(next_frontier))  # 去重保序
+
+        # 排序并取 top_k
+        ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)[
+            :top_k]
+
+        # 批量查询元数据
+        page_ids = [pid for pid, _ in ranked]
+        meta_map = self._fetch_page_meta(page_ids)
+
+        return [
+            GraphSearchResult(
+                page_id=pid,
+                score=round(sc, 4),
+                metadata=meta_map.get(pid, {}),
+                evidence=evidence_map.get(pid, []),
+            )
+            for pid, sc in ranked
+        ]
+
+    def _expand_one_hop(
+        self, page_id: str, sim_threshold: float
+    ) -> List[Tuple[str, str, float]]:
+        """返回 page_id 的一跳邻居：(neighbor_page_id, edge_type, score)。"""
+        rows = self.client.query(
+            """
+            MATCH (p:Page {page_id: $pid})
+
+            // 同版本相邻页（前后页）
+            OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
+            OPTIONAL MATCH (e)-[:HAS_PAGE]->(sibling:Page)
+            WHERE sibling.page_id <> $pid
+
+            // 共享实体页面
+            OPTIONAL MATCH (p)-[:MENTIONS]->(ent:Entity)<-[:MENTIONS]-(ep:Page)
+            WHERE ep.page_id <> $pid
+
+            // 视觉相似页面
+            OPTIONAL MATCH (p)-[sr:SIMILAR_TO]->(sp:Page)
+            WHERE sr.score >= $sim_threshold
+
+            RETURN
+              collect(DISTINCT {pid: sibling.page_id, type: 'SAME_EDITION', score: 1.0}) AS edition_neighbors,
+              collect(DISTINCT {pid: ep.page_id,      type: 'MENTIONS_ENTITY', score: 1.0}) AS entity_neighbors,
+              collect(DISTINCT {pid: sp.page_id,      type: 'SIMILAR_TO', score: sr.score}) AS sim_neighbors
+            """,
+            {"pid": page_id, "sim_threshold": sim_threshold},
+        )
+        if not rows:
+            return []
+
+        result: List[Tuple[str, str, float]] = []
+        r = rows[0]
+        for group in ("edition_neighbors", "entity_neighbors", "sim_neighbors"):
+            for item in (r.get(group) or []):
+                if item and item.get("pid"):
+                    result.append(
+                        (item["pid"], item["type"], float(item.get("score") or 1.0)))
+        return result
+
+    def _fetch_page_meta(self, page_ids: List[str]) -> Dict[str, Dict[str, Any]]:
+        """批量查询页面元数据。"""
+        if not page_ids:
+            return {}
+        rows = self.client.query(
+            """
+            UNWIND $ids AS pid
+            MATCH (p:Page {page_id: pid})
+            OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
+            OPTIONAL MATCH (d:Document)-[:HAS_EDITION]->(e)
+            RETURN p.page_id AS page_id,
+                   p.ocr_text AS ocr_text,
+                   p.image_path AS image_path,
+                   e.version_type AS version_type,
+                   e.edition_id AS edition_id,
+                   d.title AS title
+            """,
+            {"ids": page_ids},
+        )
+        return {
+            r["page_id"]: {
+                "title": r.get("title"),
+                "version_type": r.get("version_type"),
+                "edition_id": r.get("edition_id"),
+                "ocr_text": r.get("ocr_text"),
+                "image_path": r.get("image_path"),
+            }
+            for r in rows
+            if r.get("page_id")
+        }
 
     def get_entity_cooccurrence(
         self, entity_text: str, limit: int = 10

@@ -3,6 +3,7 @@
 from .client import Neo4jClient
 from .builder import GraphBuilder
 from .retriever import GraphRetriever, GraphSearchResult
+from .recognizer import ImageRecognizer, RecognitionResult
 from .models import Collection, Document, Edition, Entity, Layout, Page
 
 __version__ = "2.0.0"
@@ -12,6 +13,8 @@ __all__ = [
     "GraphBuilder",
     "GraphRetriever",
     "GraphSearchResult",
+    "ImageRecognizer",
+    "RecognitionResult",
     "Document",
     "Edition",
     "Collection",

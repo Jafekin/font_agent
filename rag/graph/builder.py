@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 import re
 from pathlib import Path
@@ -22,26 +23,108 @@ from .models import Collection, Document, Edition, Entity, Layout, Page
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# 简单正则实体抽取（人名用"·"分隔的汉字串；地名匹配常见地名词缀）
+# LLM 实体抽取
 # ---------------------------------------------------------------------------
-_PERSON_PATTERN = re.compile(
-    r"(?:司马迁|班固|刘向|左丘明|孔子|孟子|荀子|韩非|庄子|[A-Z\u4e00-\u9fa5]{2,4}(?:撰|著|编|注|疏|校))"
-)
-_PLACE_PATTERN = re.compile(
-    r"[京都郡县州府国]{0,1}[\u4e00-\u9fa5]{1,3}(?:京|都|郡|县|州|府|国|城|关|山|水|湖|江|河|海)"
-)
+_ENTITY_EXTRACTION_PROMPT = """\
+你是一位古籍文献分析助手。请从以下古籍文本中抽取命名实体，仅输出 JSON，不要输出任何其他内容。
+
+输出格式（严格遵守）：
+{{"entities": [{{"text": "实体文字", "type": "PERSON|PLACE|WORK|DYNASTY"}}, ...]}}
+
+实体类型说明：
+- PERSON：人名（作者、注释者、历史人物等）
+- PLACE：地名（地点、政区、山川等）
+- WORK：书名或篇名
+- DYNASTY：朝代或时期
+
+文本：
+{text}
+"""
 
 
-def _extract_entities(text: str) -> List[Tuple[str, str]]:
-    """从 OCR 文本中提取 (文字, 类型) 对，类型为 PERSON 或 PLACE。"""
-    entities: List[Tuple[str, str]] = []
-    for m in _PERSON_PATTERN.finditer(text):
-        name = m.group().rstrip("撰著编注疏校")
-        if len(name) >= 2:
-            entities.append((name, "PERSON"))
-    for m in _PLACE_PATTERN.finditer(text):
-        entities.append((m.group(), "PLACE"))
-    return entities
+def _extract_entities_with_llm(
+    text: str, page_id: str, page_dir: Optional[Path] = None
+) -> List[Tuple[str, str]]:
+    """调用 LLM 从文本中提取命名实体，返回 (文字, 类型) 列表。
+
+    如果 page_dir 下已有 entities.json 缓存，直接读取缓存，不调用 LLM。
+    提取完成后将结果写入 page_dir/entities.json 供后续复用。
+    """
+    from rag.naive.pipeline import get_openai_client
+
+    # ---- 读缓存 ----
+    cache_path = page_dir / "entities.json" if page_dir else None
+    if cache_path and cache_path.exists():
+        try:
+            with open(cache_path, "r", encoding="utf-8") as f:
+                cached = json.load(f)
+            result = [(item["text"], item["type"]) for item in cached]
+            logger.debug("页面 %s 使用实体缓存（%d 条）", page_id, len(result))
+            return result
+        except Exception as exc:
+            logger.warning("页面 %s 读取实体缓存失败，重新提取: %s", page_id, exc)
+
+    if not text or not text.strip():
+        return []
+
+    # 截断过长文本，避免超出 token 限制
+    truncated = text[:3000]
+    prompt = _ENTITY_EXTRACTION_PROMPT.format(text=truncated)
+
+    try:
+        client = get_openai_client()
+        resp = client.chat.completions.create(
+            model="ernie-4.5-turbo-vl",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0,
+            max_tokens=1024,
+        )
+        raw = resp.choices[0].message.content or ""
+        # 只保留 JSON 部分（模型有时会在前后加说明文字）
+        start = raw.find("{")
+        end = raw.rfind("}") + 1
+        if start == -1 or end == 0:
+            logger.warning("页面 %s 实体抽取：LLM 返回非 JSON 内容", page_id)
+            return []
+        json_str = raw[start:end]
+        result = []
+        try:
+            data = json.loads(json_str)
+            items = data.get("entities", [])
+        except json.JSONDecodeError:
+            # LLM 返回格式不合规（缺逗号、非法转义等），用正则逐条提取
+            logger.debug("页面 %s JSON 解析失败，回退到正则提取", page_id)
+            _ENTITY_RE = re.compile(
+                r'"text"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"\s*,\s*"type"\s*:\s*"([^"]+)"'
+                r'|"type"\s*:\s*"([^"]+)"\s*,\s*"text"\s*:\s*"([^"\\]*(?:\\.[^"\\]*)*)"',
+            )
+            items = []
+            for m in _ENTITY_RE.finditer(json_str):
+                if m.group(1):
+                    items.append({"text": m.group(1), "type": m.group(2)})
+                else:
+                    items.append({"text": m.group(4), "type": m.group(3)})
+        for item in items:
+            t = str(item.get("text", "")).strip()
+            etype = str(item.get("type", "")).strip().upper()
+            if t and etype in {"PERSON", "PLACE", "WORK", "DYNASTY"}:
+                result.append((t, etype))
+
+        # ---- 写缓存 ----
+        if cache_path:
+            try:
+                with open(cache_path, "w", encoding="utf-8") as f:
+                    json.dump(
+                        [{"text": t, "type": e} for t, e in result],
+                        f, ensure_ascii=False, indent=2,
+                    )
+            except Exception as exc:
+                logger.warning("页面 %s 写入实体缓存失败: %s", page_id, exc)
+
+        return result
+    except Exception as exc:
+        logger.warning("页面 %s 实体抽取失败: %s", page_id, exc)
+        return []
 
 
 def _entity_id(text: str, etype: str) -> str:
@@ -184,7 +267,8 @@ class GraphBuilder:
 
         # ---- Collection ----
         if e.holding_institution:
-            coll_id = hashlib.md5(e.holding_institution.encode()).hexdigest()[:10]
+            coll_id = hashlib.md5(
+                e.holding_institution.encode()).hexdigest()[:10]
             if coll_id not in created_collections:
                 catalog_main = e.catalog_id_main or None
                 coll = Collection(
@@ -192,7 +276,8 @@ class GraphBuilder:
                     institution=e.holding_institution,
                     call_number=catalog_main,
                 )
-                self.client.merge_node("Collection", "collection_id", coll.to_dict())
+                self.client.merge_node(
+                    "Collection", "collection_id", coll.to_dict())
                 self.client.merge_relation(
                     "Document", "doc_id", doc_id,
                     "STORED_IN",
@@ -223,7 +308,8 @@ class GraphBuilder:
 
         # ---- Layout ----
         line_count = page.ocr_stats.line_count
-        has_annotation = len(page.ocr_lines) > line_count * 1.5 if line_count else False
+        has_annotation = len(page.ocr_lines) > line_count * \
+            1.5 if line_count else False
         lid = _layout_id(line_count, has_annotation)
         if lid not in created_layouts:
             layout = Layout(
@@ -242,7 +328,9 @@ class GraphBuilder:
 
         # ---- Entities ----
         if extract_entities and page.full_text:
-            for entity_text, entity_type in _extract_entities(page.full_text):
+            for entity_text, entity_type in _extract_entities_with_llm(
+                page.full_text, page.page_id, page.page_dir
+            ):
                 eid = _entity_id(entity_text, entity_type)
                 if eid not in created_entities:
                     ent = Entity(
@@ -250,7 +338,8 @@ class GraphBuilder:
                         entity_text=entity_text,
                         entity_type=entity_type,
                     )
-                    self.client.merge_node("Entity", "entity_id", ent.to_dict())
+                    self.client.merge_node(
+                        "Entity", "entity_id", ent.to_dict())
                     created_entities.add(eid)
                     stats["entities"] += 1
                 self.client.merge_relation(

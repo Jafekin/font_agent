@@ -24,6 +24,7 @@
 | ✅ | 数据索引系统（Chinese-CLIP 向量索引） |
 | ✅ | OCR 版式识别（看典古籍 API） |
 | ✅ | GraphRAG（Neo4j 知识图谱构建与检索） |
+| ✅ | 混合检索（向量种子 + 图谱 BFS 扩展，加权边得分） |
 | ⏳ | Agentic 推理架构（多步工具规划） |
 
 ---
@@ -43,7 +44,7 @@
 | `rag/naive/retriever.py` | NumPy 索引余弦相似度 Top-K 检索 |
 | `rag/naive/prompt.py` | 根据检索上下文构造结构化 Prompt |
 | `rag/naive/pipeline.py` | 检索 → Prompt → LLM 推理流水线 |
-| `rag/graph/` | GraphRAG 知识图谱构建与查询 |
+| `rag/graph/` | GraphRAG 知识图谱构建、BFS 混合检索与查询 |
 | `ocr/` | 看典古籍 OCR API 客户端 |
 
 ---
@@ -152,6 +153,8 @@ print(r.json())
 
 ## RAG 工作流
 
+### NaiveRAG
+
 ```
 图片输入 → Chinese-CLIP 编码 → NumPy 余弦检索
        → Prompt 拼装 → LLM 生成 → 结构化报告
@@ -169,6 +172,29 @@ result = pipeline.run(
 )
 print(result["analysis"])           # 生成报告
 print(result["retrieved_references"])  # 引用页面 ID
+```
+
+### GraphRAG 混合检索
+
+```
+图片/文本输入 → Chinese-CLIP 编码 → 向量 Top-K 种子
+            → BFS 图谱扩展（同版本页 / 共享实体 / 视觉相似）
+            → 加权边得分累积 → 综合排序 → Top-K 结果
+```
+
+边类型权重：`同版本(1.0) > 共享实体(0.7) > 视觉相似(0.5)`，深层节点按 `0.6^depth` 衰减。
+
+```python
+from rag.graph import Neo4jClient, GraphRetriever
+
+# seeds 来自 TxtaiRetriever.search_by_vector()
+seeds = [("page_001", 0.92), ("page_007", 0.85)]
+
+with Neo4jClient(password="password") as client:
+    r = GraphRetriever(client)
+    results = r.hybrid_search(seeds, bfs_depth=1, top_k=10)
+    for res in results:
+        print(res.page_id, res.score, res.evidence)
 ```
 
 ---

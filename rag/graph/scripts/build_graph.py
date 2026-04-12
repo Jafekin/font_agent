@@ -41,7 +41,7 @@ def main() -> None:
     parser.add_argument("--neo4j-user", default="neo4j", help="Neo4j 用户名")
     parser.add_argument("--neo4j-password", default="password", help="Neo4j 密码")
     parser.add_argument("--neo4j-db", default="neo4j", help="Neo4j 数据库名")
-    parser.add_argument("--entities", action="store_true", default=False,
+    parser.add_argument("--entities", action="store_true", default=True,
                         help="是否从 OCR 文本提取命名实体")
     parser.add_argument("--embeddings", default=None,
                         help="embeddings.npy 路径（构建 SIMILAR_TO 关系）")
@@ -51,7 +51,7 @@ def main() -> None:
                         help="相似度阈值（默认 0.88）")
     parser.add_argument("--sim-top-k", type=int, default=10,
                         help="每页最多保留的相似关系数（默认 10）")
-    parser.add_argument("--clear", action="store_true", default=False,
+    parser.add_argument("--clear", action="store_true", default=True,
                         help="构建前清空数据库（不可逆）")
     parser.add_argument("--stats-only", action="store_true", default=False,
                         help="仅打印当前图谱统计信息，不执行构建")

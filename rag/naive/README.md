@@ -58,7 +58,23 @@ print(result["retrieved_references"])  # 检索到的页面 ID
 print(result["retrieval_scores"])      # 相似度分数
 ```
 
-### 3. 仅检索（不调用 LLM）
+### 3. CLI 检索查询
+
+```bash
+# 文本向量检索
+python -m rag.naive.scripts.query text "五帝本紀" --limit 5
+
+# 图片向量检索
+python -m rag.naive.scripts.query image path/to/image.jpg --limit 3
+
+# 元数据过滤
+python -m rag.naive.scripts.query text "司马迁" --filter type=image
+
+# JSON 输出
+python -m rag.naive.scripts.query image img.jpg --json
+```
+
+### 4. 仅检索（不调用 LLM）
 
 ```python
 results = pipeline.search_similar(query_image_path="query.jpg", k=5)
