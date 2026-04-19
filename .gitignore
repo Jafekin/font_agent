@@ -141,6 +141,7 @@ rag/graph/data*
 rag/model/*
 ocr/data/*
 rag/data/*
+.obsidian/*
 
 # OS
 .DS_Store

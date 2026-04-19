@@ -25,14 +25,14 @@
 | ✅ | OCR 版式识别（看典古籍 API） |
 | ✅ | GraphRAG（Neo4j 知识图谱构建与检索） |
 | ✅ | 混合检索（向量种子 + 图谱 BFS 扩展，加权边得分） |
-| ⏳ | Agentic 推理架构（多步工具规划） |
+| ✅ | Agentic 推理架构（LangChain Agent 决定 NaiveRAG / GraphRAG skill 调用） |
 
 ---
 
 ## 系统架构
 
 <div align="center">
-  <img src="doc/系统架构.jpg" alt="系统架构" width="85%">
+  <img src="doc/img/系统架构.jpg" alt="系统架构" width="85%">
 </div>
 
 ### 核心模块
@@ -45,6 +45,7 @@
 | `rag/naive/prompt.py` | 根据检索上下文构造结构化 Prompt |
 | `rag/naive/pipeline.py` | 检索 → Prompt → LLM 推理流水线 |
 | `rag/graph/` | GraphRAG 知识图谱构建、BFS 混合检索与查询 |
+| `rag/agent/` | LangChain Agent 路由层，将 NaiveRAG / GraphRAG 封装为 skills |
 | `ocr/` | 看典古籍 OCR API 客户端 |
 
 ---

@@ -16,7 +16,8 @@ from django.views.decorators.http import require_http_methods
 from PIL import Image
 
 from .models import ScriptAnalysis
-from rag.naive.pipeline import RAGPipeline, analyze_with_llm
+from rag.agent import AgenticRAGPipeline
+from rag.naive.pipeline import analyze_with_llm
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +28,18 @@ try:  # Pillow >= 10 namespaces resampling filters
 except AttributeError:  # pragma: no cover - fallback for older Pillow
     RESAMPLE_LANCZOS = Image.LANCZOS
 
-_RAG_PIPELINE: RAGPipeline | None = None
+_RAG_PIPELINE: AgenticRAGPipeline | None = None
 
 
-def _get_rag_pipeline() -> RAGPipeline:
+def _get_rag_pipeline() -> AgenticRAGPipeline:
     """Lazy-load a shared RAG pipeline instance."""
     global _RAG_PIPELINE
     if _RAG_PIPELINE is None:
         index_path = getattr(settings, 'RAG_INDEX_PATH', None)
         if not index_path:
-            index_path = os.path.join(settings.BASE_DIR, 'rag', 'index')
-        logger.info("Initializing RAG pipeline with index %s", index_path)
-        _RAG_PIPELINE = RAGPipeline(index_path=index_path)
+            index_path = os.path.join(settings.BASE_DIR, 'rag', 'naive', 'index')
+        logger.info("Initializing agentic RAG pipeline with index %s", index_path)
+        _RAG_PIPELINE = AgenticRAGPipeline(index_path=index_path)
     return _RAG_PIPELINE
 
 
@@ -198,6 +199,8 @@ def _prepare_rag_response(rag_payload: dict, image_path: str, script_type: str, 
         'num_references': rag_payload.get('num_references', 0) if rag_success else 0,
         'pipeline_mode': rag_payload.get('pipeline_mode'),
         'fallback_used': fallback_used,
+        'selected_tools': rag_payload.get('selected_tools') or [],
+        'agent_summary': rag_payload.get('agent_summary'),
     }
 
     return _ensure_result_text(result_text), rag_meta
