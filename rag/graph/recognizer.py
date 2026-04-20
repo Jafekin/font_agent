@@ -302,7 +302,7 @@ class ImageRecognizer:
                 MATCH (p:Page {page_id: $pid})
                 OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
                 OPTIONAL MATCH (d:Document)-[:HAS_EDITION]->(e)
-                OPTIONAL MATCH (d)-[:HAS_COLLECTION]->(c:Collection)
+                OPTIONAL MATCH (d)-[:STORED_IN]->(c:Collection)
                 OPTIONAL MATCH (p)-[:HAS_LAYOUT]->(l:Layout)
                 RETURN p, e, d, c, l
                 """,

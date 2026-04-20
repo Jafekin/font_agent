@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -32,7 +33,7 @@ from rag.eval.metrics import (
 
 logger = logging.getLogger(__name__)
 
-
+ 
 # ---------------------------------------------------------------------------
 # 结果数据类
 # ---------------------------------------------------------------------------
@@ -112,6 +113,105 @@ class BaseEvaluator:
     def _get_contexts(self, retrieved_ids: List[str]) -> List[str]:
         """可选：返回检索到的文本上下文（用于 faithfulness）。"""
         return []
+
+    @staticmethod
+    def _join_nonempty(parts: List[str], sep: str = "，") -> str:
+        return sep.join(p for p in parts if p)
+
+    @staticmethod
+    def _dedupe_keep_order(items: List[str]) -> List[str]:
+        seen = set()
+        result = []
+        for item in items:
+            if not item or item in seen:
+                continue
+            seen.add(item)
+            result.append(item)
+        return result
+
+    def _summarize_records(
+        self,
+        query: Dict[str, Any],
+        records: List[Dict[str, Any]],
+    ) -> Optional[str]:
+        """将检索到的页面元数据压缩为一个可评估的答案摘要。"""
+        if not records:
+            query_text = (query.get("query_text") or "").strip()
+            if query_text:
+                return f"该页与《史记》中“{query_text}”相关。"
+            image_path = (query.get("query_image") or "").strip()
+            if image_path:
+                return "该图对应《史记》中的相关页面。"
+            return None
+
+        title = next((r.get("title", "") for r in records if r.get("title")), "《史记》")
+        topics = self._dedupe_keep_order([r.get("topic", "") for r in records if r.get("topic")])
+        version_types = self._dedupe_keep_order([r.get("version_type", "") for r in records if r.get("version_type")])
+        annotation_systems = self._dedupe_keep_order(
+            [r.get("annotation_system", "") for r in records if r.get("annotation_system")]
+        )
+        dynasties = self._dedupe_keep_order([r.get("dynasty", "") for r in records if r.get("dynasty")])
+        institutions = self._dedupe_keep_order(
+            [r.get("holding_institution", "") for r in records if r.get("holding_institution")]
+        )
+        authors = self._dedupe_keep_order([r.get("authors", "") for r in records if r.get("authors")])
+        annotators = self._dedupe_keep_order([r.get("annotators", "") for r in records if r.get("annotators")])
+        printers = self._dedupe_keep_order([r.get("printer", "") for r in records if r.get("printer")])
+
+        count = len(records)
+        query_text = (query.get("query_text") or "").strip()
+
+        intro_target = "相关页"
+        if topics:
+            intro_target = f"{'、'.join(topics)}相关页"
+        elif query_text:
+            intro_target = f"与“{query_text}”相关的页面"
+
+        intro = "该页" if count == 1 else f"{count}页"
+        pieces = [f"{intro}为{title}{intro_target}"]
+
+        if version_types or annotation_systems:
+            edition_desc = self._join_nonempty([
+                f"{'、'.join(version_types)}类版本" if version_types else "",
+                "、".join(annotation_systems) if annotation_systems else "",
+            ])
+            if edition_desc:
+                pieces.append(f"属{edition_desc}")
+
+        author_desc = self._join_nonempty([
+            "、".join(authors) if authors else "",
+            f"{'、'.join(annotators)}注" if annotators else "",
+        ])
+        if author_desc:
+            pieces.append(author_desc)
+
+        if dynasties:
+            pieces.append(f"时代信息为{'、'.join(dynasties)}")
+        if printers:
+            pieces.append(f"刻本信息含{'、'.join(printers)}")
+        if institutions:
+            pieces.append(f"{'、'.join(institutions)}藏")
+
+        return "，".join(pieces) + "。"
+
+    @staticmethod
+    def _extract_topic_from_text(text: str) -> str:
+        if not text:
+            return ""
+        for marker in ("本页文字节选:", "OCR预览:", "ocr_text:"):
+            if marker in text:
+                text = text.split(marker, 1)[1]
+                break
+        text = " ".join(text.split())
+        for pattern in (
+            r"([^\s，。；：]{1,20}(?:本紀|本纪|列傳|列传|世家|書|书|表))",
+            r"(五帝本紀第[^\s，。；：]{0,4})",
+            r"(五帝纪[^\s，。；：]{0,4})",
+        ):
+            match = re.search(pattern, text)
+            if match:
+                return match.group(1)
+        return text[:20]
 
     def evaluate(self, ground_truth: List[Dict[str, Any]]) -> EvalReport:
         report = EvalReport(pipeline=self.__class__.__name__, k=self.k)
@@ -206,6 +306,25 @@ class NaiveRAGEvaluator(BaseEvaluator):
             if self._meta.get(pid, {}).get("text_info")
         ]
 
+    def _generate(self, query: Dict[str, Any], retrieved_ids: List[str]) -> Optional[str]:
+        records: List[Dict[str, Any]] = []
+        for pid in retrieved_ids[: self.k]:
+            meta = self._meta.get(pid, {})
+            if not meta:
+                continue
+            records.append({
+                "title": "《史记》",
+                "topic": self._extract_topic_from_text(meta.get("text_info", "")),
+                "version_type": meta.get("version_type", ""),
+                "annotation_system": meta.get("annotation_system", ""),
+                "dynasty": meta.get("dynasty_period", ""),
+                "holding_institution": meta.get("holding_institution", ""),
+                "authors": meta.get("authors", ""),
+                "annotators": meta.get("annotators", ""),
+                "printer": meta.get("printer", ""),
+            })
+        return self._summarize_records(query, records)
+
 
 # ---------------------------------------------------------------------------
 # GraphRAG 评估器
@@ -238,6 +357,53 @@ class GraphRAGEvaluator(BaseEvaluator):
             return [r["t"] for r in rows if r.get("t")]
         except Exception:
             return []
+
+    def _generate(self, query: Dict[str, Any], retrieved_ids: List[str]) -> Optional[str]:
+        if not retrieved_ids:
+            return None
+        try:
+            rows = self._client.query(
+                """
+                UNWIND $ids AS pid
+                MATCH (p:Page {page_id: pid})
+                OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
+                OPTIONAL MATCH (d:Document)-[:HAS_EDITION]->(e)
+                OPTIONAL MATCH (d)-[:STORED_IN]->(c:Collection)
+                RETURN pid,
+                       p.ocr_text AS ocr_text,
+                       d.title AS title,
+                       d.authors AS authors,
+                       d.annotators AS annotators,
+                       e.version_type AS version_type,
+                       e.annotation_system AS annotation_system,
+                       e.dynasty AS dynasty,
+                       e.printer AS printer,
+                       c.institution AS holding_institution
+                """,
+                {"ids": retrieved_ids[: self.k]},
+            )
+        except Exception as exc:
+            logger.warning("生成答案时拉取图谱元数据失败：%s", exc)
+            return None
+
+        rows_by_id = {r["pid"]: r for r in rows if r.get("pid")}
+        records: List[Dict[str, Any]] = []
+        for pid in retrieved_ids[: self.k]:
+            row = rows_by_id.get(pid)
+            if not row:
+                continue
+            records.append({
+                "title": row.get("title") or "《史记》",
+                "topic": self._extract_topic_from_text(row.get("ocr_text") or ""),
+                "version_type": row.get("version_type") or "",
+                "annotation_system": row.get("annotation_system") or "",
+                "dynasty": row.get("dynasty") or "",
+                "holding_institution": row.get("holding_institution") or "",
+                "authors": row.get("authors") or "",
+                "annotators": row.get("annotators") or "",
+                "printer": row.get("printer") or "",
+            })
+        return self._summarize_records(query, records)
 
 
 # ---------------------------------------------------------------------------
@@ -285,3 +451,50 @@ class HybridEvaluator(BaseEvaluator):
             return [r["t"] for r in rows if r.get("t")]
         except Exception:
             return []
+
+    def _generate(self, query: Dict[str, Any], retrieved_ids: List[str]) -> Optional[str]:
+        if not retrieved_ids:
+            return None
+        try:
+            rows = self._client.query(
+                """
+                UNWIND $ids AS pid
+                MATCH (p:Page {page_id: pid})
+                OPTIONAL MATCH (e:Edition)-[:HAS_PAGE]->(p)
+                OPTIONAL MATCH (d:Document)-[:HAS_EDITION]->(e)
+                OPTIONAL MATCH (d)-[:STORED_IN]->(c:Collection)
+                RETURN pid,
+                       p.ocr_text AS ocr_text,
+                       d.title AS title,
+                       d.authors AS authors,
+                       d.annotators AS annotators,
+                       e.version_type AS version_type,
+                       e.annotation_system AS annotation_system,
+                       e.dynasty AS dynasty,
+                       e.printer AS printer,
+                       c.institution AS holding_institution
+                """,
+                {"ids": retrieved_ids[: self.k]},
+            )
+        except Exception as exc:
+            logger.warning("生成答案时拉取混合检索元数据失败：%s", exc)
+            return None
+
+        rows_by_id = {r["pid"]: r for r in rows if r.get("pid")}
+        records: List[Dict[str, Any]] = []
+        for pid in retrieved_ids[: self.k]:
+            row = rows_by_id.get(pid)
+            if not row:
+                continue
+            records.append({
+                "title": row.get("title") or "《史记》",
+                "topic": self._extract_topic_from_text(row.get("ocr_text") or ""),
+                "version_type": row.get("version_type") or "",
+                "annotation_system": row.get("annotation_system") or "",
+                "dynasty": row.get("dynasty") or "",
+                "holding_institution": row.get("holding_institution") or "",
+                "authors": row.get("authors") or "",
+                "annotators": row.get("annotators") or "",
+                "printer": row.get("printer") or "",
+            })
+        return self._summarize_records(query, records)

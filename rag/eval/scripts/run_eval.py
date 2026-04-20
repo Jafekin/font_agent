@@ -155,6 +155,9 @@ def cmd_all(args: argparse.Namespace) -> None:
     client.close()
 
     # 对比摘要
+    def _fmt_metric(value) -> str:
+        return f"{value:.4f}" if value is not None else "   N/A"
+
     print(f"\n{'─'*60}")
     print(f"{'Pipeline':<12} {'P@K':>7} {'R@K':>7} {'F1@K':>7} {'MRR':>7} {'NDCG':>7} {'Hit':>7}")
     print(f"{'─'*60}")
@@ -162,6 +165,24 @@ def cmd_all(args: argparse.Namespace) -> None:
         m = rep.retrieval
         print(f"{rep.pipeline:<12} {m.precision:>7.4f} {m.recall:>7.4f} "
               f"{m.f1:>7.4f} {m.mrr:>7.4f} {m.ndcg:>7.4f} {m.hit_rate:>7.4f}")
+    print(f"{'─'*60}")
+    print(f"{'Pipeline':<12} {'BLEU1':>7} {'BLEU2':>7} {'BLEU4':>7} {'R1':>7} {'R2':>7} {'RL':>7} {'CF1':>7} {'EM':>7} {'Rel':>7} {'Faith':>7}")
+    print(f"{'─'*60}")
+    for rep in reports:
+        g = rep.generation
+        print(
+            f"{rep.pipeline:<12} "
+            f"{_fmt_metric(g.bleu_1 if g else None):>7} "
+            f"{_fmt_metric(g.bleu_2 if g else None):>7} "
+            f"{_fmt_metric(g.bleu_4 if g else None):>7} "
+            f"{_fmt_metric(g.rouge_1 if g else None):>7} "
+            f"{_fmt_metric(g.rouge_2 if g else None):>7} "
+            f"{_fmt_metric(g.rouge_l if g else None):>7} "
+            f"{_fmt_metric(g.char_f1 if g else None):>7} "
+            f"{_fmt_metric(g.exact_match if g else None):>7} "
+            f"{_fmt_metric(g.answer_relevance if g else None):>7} "
+            f"{_fmt_metric(g.faithfulness if g else None):>7}"
+        )
     print(f"{'─'*60}\n")
 
     if args.output:

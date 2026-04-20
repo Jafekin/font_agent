@@ -23,7 +23,7 @@ rag/data/  →  NaiveDataLoader（PageData）
 
 **节点类型**：Document · Edition · Collection · Page · Layout · Entity
 
-**关系类型**：HAS_EDITION · HAS_PAGE · HAS_COLLECTION · HAS_LAYOUT · MENTIONS · MENTIONS_ENTITY · SAME_EDITION · SIMILAR_TO
+**关系类型**：HAS_EDITION · HAS_PAGE · STORED_IN · HAS_LAYOUT · MENTIONS · MENTIONS_ENTITY · SAME_EDITION · SIMILAR_TO
 
 ## 快速上手
 
